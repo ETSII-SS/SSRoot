@@ -1,0 +1,5 @@
+# Los .bat se guardan y se entregan con finales de línea de Windows (CRLF).
+# Sin esto, quien descargue el archivo desde la web de GitHub recibe un
+# archivo con finales Unix, y cmd.exe puede tropezar en los goto y las
+# etiquetas.
+*.bat -text
