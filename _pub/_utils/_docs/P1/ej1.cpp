@@ -1,46 +1,55 @@
 ...
 
-// Copiar esto dentro de la funci√≥n main, tras setlocale...
-int tout= 10; 	// Opcional (solo C++):   int tout(10);  
-int tecla= 0; 	// Opcional (solo C++):   int tecla(0);
-for (int i = 0; i < tout; i++)
-{
-	printf("Pulsa una tecla antes de %d segundos\n", tout -i);
-	int tecla= esperaPulseTecla(1000);
-	if (tecla != 0)
-		break;
-}
-if (tecla)
-	printf("Se ha pulsado la tecla \'%c\'\n", tecla);
-else
-	printf("\nNo se ha pulsado ninguna tecla en %d segundos\n", tout);
+// Copiar esto al mismo archivo donde est· main
+#define NRO_BYTES sizeof(i)
+void Ej1_Inicial(){
+	clock_t inicio = clock();  // inicia mediciÛn de tiempo
 
+	//printf("TamaÒo de i: %d bytes\n", NRO_BYTES);
+	char i;
+	for (i = 1; i > 0; i++)	{
+		printf("%d:0x%02x -> ", i, i);
+		ImprimeBinario(i, NRO_BYTES*8);
+		printf("\n");
+	}
+
+	clock_t fin = clock();  // finaliza mediciÛn de tiempo
+	double milisegundos = (fin - inicio) / CLOCKS_PER_SEC * 1000;
+
+	printf(__FUNCTION__ ": Tiempo: %.3f ms\n", milisegundos);
+	printf("TamaÒo de i: %d bytes\n", NRO_BYTES);
+}
 ...
 
+
+
+
+
+
 // y esto a su archivo nusuario-P1a.cpp
-int esperaPulseTecla(int toutMs)
+size_t ImprimeBinario(int valor, int bits)
 {
-	int res = 0;
-	int antes = GetTickCount();
-	int ahora;
-	if (toutMs < 0)	{
-		printf("ERROR: esperaPulseTecla: el tiempo de espera no puede ser negativo\n");
-		exit(EXIT_FAILURE);
+	for (int i = bits - 1; i >= 0; i--)
+	{
+		printf("%d", (valor >> i) & 1);
+		// Imprime un espacio para separar cada nibble
+		if (i % 4 == 0)
+			printf(" ");
+		// Imprime un espacio adicional para separara cada byte
+		if (i % 8 == 0)
+			printf(" ");
 	}
-	do {
-		if (_kbhit())
-		{
-			res = _getch();
-			break;
-		}
-		if (toutMs>0)
-			Sleep(1);
-		ahora = GetTickCount();
-	} while (ahora - antes < toutMs);
-	return res;
+	return bits;
 }
 
-// Experimento: ¬øa√±adir includes de m√°s modifica el tama√±o del c√≥digo?
+
+
+
+
+
+
+
+// Experimento: øaÒadir includes de m·s modifica el tamaÒo del cÛdigo?
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -74,83 +83,16 @@ int esperaPulseTecla(int toutMs)
 
 
 
-printf("Pulsa una tecla para salir \n");
-int contador = 0;
-int tecla = 0;
-printf("Tam. contador: %d bytes\n", sizeof(contador));
-while (tecla = 0)
-{
-	printf("\r%d        ", ++contador);
-	tecla = esperaPulseTecla(0);
-}
 
 
 
 
-
-void LeeFabricanteCPU(char fabricante[], int tamfabricante)
-{
-
-	int info[4];
-	__cpuid(info, 0); // Ver la ayuda de VS para ver qu√© hace la funcion __cpuid
-	// Ver https://en.wikipedia.org/wiki/CPUID  para la instruccion CPUID.
-
-	// Lo que hace funci√≥n anterior es cargar EAX con 0 y ejecutar la instrucci√≥n CPUID
-	// Tras ello, EBX, EDX, ECX contienen 12 bytes ASCII con la "cadena del fabricante"
-
-	for (size_t k = 0; k < sizeof(info[0]); k++)
+void Ej1_LosFloatsNoSonReales() {
+	int i = 0;
+	for (double j = 0; j != 3.0; j+= 1.0/3.0)
 	{
-		fabricante[0 * 4 + k] = info[1] >> k * 8; // Qu√© hace esta l√≠nea?
-	}
-	for (size_t k = 0; k < sizeof(info[0]); k++)
-	{
-		fabricante[1 * 4 + k] = info[3] >> k * 8;
-	}
-	for (size_t k = 0; k < sizeof(info[0]); k++)
-	{
-		fabricante[2 * 4 + k] = info[2] >> k * 8;
-	}
-}
-
-// Para probarlo, sustituir el c√≥digo en main el c√≥digo del ejercicio anterior por este:
-	char fab[13]; 
-	int nroElementos= sizeof(fab);
-	LeeFabricanteCPU(fab, nroElementos);
-	printf("El fabricante de la CPU es: %s\n", fab);
-
-
-
-
-
-
-
-
-
-
-void  LeeModeloCPU(char modelo[], int tamModelo)
-{
-	int info[4];
-	__cpuid(info, 0x80000000);	// Comprueba que el procesador soporta las caracteristicas extendidas de EAX
-	if (info[0] < 0x80000000)
-	{
-		strncpy(modelo,
-			"La CPU no soporta caracteristicas extendidas de CPUID\n",
-			tamModelo - 1);
-	}
-	else
-	{
-		// Ejecuta __cpuid con los c√≥digos 0x80000002, 0x80000003 y 0x80000004
-		for (int i = 0; i < 3; i++)
-		{
-			__cpuid(info, 0x80000002 + i);
-			for (int j = 0; j < 4; j++)	// Copia el bloque de 4x4 caracteres
-			{
-				for (size_t k = 0; k < sizeof(info[0]); ++k)
-				{
-					modelo[i * 12 + j * 4 + k] = info[j] >> k * 8;
-				}
-			}
-		}
+		printf("%f", j, (int)j);
+		printf("\n");
 	}
 }
 
@@ -158,114 +100,139 @@ void  LeeModeloCPU(char modelo[], int tamModelo)
 
 
 
-// Declaraci√≥n de la clase ss::Dbg
-namespace ss {
 
-	class Dbg
+
+
+
+
+
+
+
+
+
+#define LIMITE 0
+typedef char tipo_test_t;
+
+void Ej1_InicialCorregido() {
+	clock_t inicio = clock();  // inicia mediciÛn de tiempo
+
+	tipo_test_t i = 0;
+	// Imprime todos los valores de i
+	do {
+		printf("%d:0x%02x -> ", i, (unsigned_tipo_test_t)i);
+		ImprimeBinario(i, NRO_BYTES * 8);
+		printf("\n");
+		i += 1;
+	} while (i != LIMITE);
+
+	clock_t fin = clock();
+	double milisegundos =
+		1000.0 * (double)(fin - inicio) / CLOCKS_PER_SEC;
+
+	printf(__FUNCTION__ ": Tiempo de ejecuciÛn: %.3f ms\n", milisegundos);
+	printf("TamaÒo de i: %d bytes\n", NRO_BYTES);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Ej1_InicialMasRapido() {
+	clock_t inicio = clock();  // inicia mediciÛn de tiempo
+
+	int len = 0;
+	char buffer[200];
+	tipo_test_t i = 0;
+	// Imprime todos los valores de i 
+	do {
+		len = snprintf(buffer, sizeof(buffer), "%d:0x%02x -> ", i, (unsigned_tipo_test_t)i);
+		len += ImprimeBinario(buffer + len, sizeof(buffer) - len, i, NRO_BYTES * 8);
+		printf("%s\n", buffer);
+		i += 1;
+	} while (i != LIMITE);
+
+	clock_t fin = clock();
+	double milisegundos =
+		1000.0 * (double)(fin - inicio) / CLOCKS_PER_SEC;
+
+	printf(__FUNCTION__ ": Tiempo de ejecuciÛn: %.3f ms\n", milisegundos);
+	printf("TamaÒo de i: %d bytes\n", NRO_BYTES);
+}
+
+
+
+
+
+
+
+
+//VersiÛn de ImprimeBinario con con par·metros distintos
+size_t ImprimeBinario(char* buffer, size_t tamBuffer, int valor, int bits)
+{
+	size_t len = 0;
+	for (int i = bits - 1; i >= 0; i--)
 	{
-	private:	// Opcional, por defecto todo es privado
-	public:
-		Dbg();
-		~Dbg();
-		// Funciona exactamente igual que printf, pero env√≠a la salida a la ventana de salida de depuraci√≥n
-		static int Print(char const* const formatString, ...);
-	};
-
-} // Fin namespace
-...
-
-
-
-
-// Definiciones asociadas a la clase Dbg
-namespace ss {
-	Dbg::Dbg() 
-	{
+		len += snprintf(buffer + len, tamBuffer - len,
+			"%d", (valor >> i) & 1);
+		// Imprime un espacio para separar cada nibble
+		if ((i % 4) == 0)
+			snprintf(buffer + len, tamBuffer - len, " ");
+		if ((i % 8) == 0)
+			snprintf(buffer + len, tamBuffer - len, " ");
 	}
-
-	Dbg::~Dbg()
-	{
-	}
-	// Esta es una funci√≥n con par√°metros variables, como printf.
-	// Ver N3- https://learn.microsoft.com/es-es/cpp/cpp/functions-with-variable-argument-lists-cpp?view=msvc-170
-	int Dbg::Print(char const* const formatString, ...)
-	{
-		char buffer[TAM_BUFFER_DbgPrint];
-		va_list args;
-		va_start(args, formatString);
-		int ret = vsnprintf(buffer, sizeof(buffer), formatString, args);
-		if (ret >= 0 && ret < sizeof(buffer))
-		{
-			OutputDebugStringA(buffer); // Imprime en la ventana de salida de depuraci√≥n
-		}
-		va_end(args);
-		return ret;
-	}
-
-} // Fin namespace
-
-
-
-/// En Java, la prueba b√°sica de una clase como Dbg ser√≠a
-System.out.printf("Iniciando prueba Ej ...\n");
-int nroTests=1;
-Dbg dbgObj= null; //en C++ se usa nullptr en lugar de null
-while ((nroTests--)>0){   // Solo para poder repetir el trozo de dentro 
-    dbgObj = new Dbg();  
-    dbgObj.CronoInicio();
-    Thread.sleep(1000); // Espera 500 ms. En C-Windows usar√≠amos Sleep(1000)
-    dbgObj.CronoFin();
-    System.out.printf("El tiempo transcurrido %f segs\n", 
-                  dbgObj.CronoSegs);
+	return len;
 }
 
 
 
+// ------------------------------------------------------------------
+// SesiÛn 2: matrices C y archivos
+// ------------------------------------------------------------------
 
-
-// Medici√≥n de tiempos en Dbg. 
-
-// Paso 1: Obtiene la frecuencia del timer del PC en tics/segundo usando QueryPerformanceFrequency
-//       Esta frecuencia depende del hardware del PC y no cambia durante la ejecuci√≥n del programa
-LARGE_INTEGER frequencia;
-if (QueryPerformanceFrequency(&frequencia))
+// Lee los primeros bytes de 'nombre' y los deja en 'bloque'.
+// Devuelve el n˙mero de bytes leÌdos, o -1 si no se puede abrir el archivo.
+int LeeBloqueArchivo(const char nombre[], unsigned char bloque[], int tamBloque)
 {
-	_ticsPorSegundoDelTimerDelPC = frequencia.QuadPart;
-	CronoSegs = -1.0; // Un n√∫mero negativo indica que no se ha iniciado el cron√≥metro.
-}
-else
-{
-	Print("Error al ejecutar QueryPerformanceCounter en " __FUNCTION__);
-}
+	FILE* f;
+	if (fopen_s(&f, nombre, "rb") != 0)
+		return -1;
 
+	int n = (int)fread(bloque, 1, 16, f);
 
-
-
-// Paso 2: guarda el valor actual del timer del PC en tics usando QueryPerformanceCounter 
-LARGE_INTEGER ticks;
-if (QueryPerformanceCounter(&ticks))
-{
-	_ticsAntes = ticks.QuadPart;
-}
-else
-{
-	Print("Error al ejecutar QueryPerformanceCounter en " __FUNCTION__);
+	fclose(f);
+	return n;
 }
 
+// Para probarlo, colocar en main:
+	unsigned char bloque[16];
+	int n = LeeBloqueArchivo("prueba.bin", bloque, sizeof(bloque));
+	for (int i = 0; i < n; i++)
+		printf("%02X ", bloque[i]);
 
 
 
-// Paso 3: Obtiene el valor actual del timer del PC en tics usando QueryPerformanceCounter
-// y le resta el valor guardado en el paso 2 para obtener el n√∫mero de tics transcurridos.
-// Divide este n√∫mero por la frecuencia del timer del PC para obtener el n√∫mero de segundos transcurridos.
-int64_t ahora;
-LARGE_INTEGER ticks;
-if (QueryPerformanceCounter(&ticks))
+
+// Compone en 'destino' una lÌnea del visor: desplazamiento y bytes en hexadecimal.
+// Devuelve el n˙mero de caracteres escritos en destino.
+size_t ImprimeLineaHex(char destino[], size_t tamDestino,
+	long offset, const unsigned char datos[], size_t nDatos)
 {
-	ahora = ticks.QuadPart;
-	CronoSegs = ((ahora)-_ticsAntes) / _ticsPorSegundoDelTimerDelPC;
-}
-else
-{
-	Print("Error al ejecutar QueryPerformanceCounter en " __FUNCTION__);
+	size_t len = 0;
+
+	len += snprintf(destino + len, tamDestino - len, "%08lX  ", offset);
+
+	for (size_t i = 0; i < 16; i++)
+		snprintf(destino + len, tamDestino, "%02X ", datos[i]);
+
+	return len;
 }
