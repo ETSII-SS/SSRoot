@@ -201,38 +201,84 @@ size_t ImprimeBinario(char* buffer, size_t tamBuffer, int valor, int bits)
 
 // Lee los primeros bytes de 'nombre' y los deja en 'bloque'.
 // Devuelve el número de bytes leídos, o -1 si no se puede abrir el archivo.
-int LeeBloqueArchivo(const char nombre[], unsigned char bloque[], int tamBloque)
+int LeeBloqueArchivo(const char nombre[], unsigned char bloque[])
 {
 	FILE* f;
 	if (fopen_s(&f, nombre, "rb") != 0)
 		return -1;
-
-	int n = (int)fread(bloque, 1, 16, f);
-
+	int n = (int)fread(bloque, 1, 32, f);
 	fclose(f);
 	return n;
 }
 
-// Para probarlo, colocar en main:
-	unsigned char bloque[16];
-	int n = LeeBloqueArchivo("prueba.bin", bloque, sizeof(bloque));
+// Para probarlo, llamar a esta función desde main
+// Ejercicio inicial sobre archivos, P1-Sesión 2.
+void Eje1_DumpbinAntesDeEmpezar() {
+	unsigned char bloque[32], var1= 1;
+	int n = LeeBloqueArchivo("prueba.bin", bloque);
 	for (int i = 0; i < n; i++)
 		printf("%02X ", bloque[i]);
+	printf("\n");
+}
 
 
 
 
-// Compone en 'destino' una línea del visor: desplazamiento y bytes en hexadecimal.
-// Devuelve el número de caracteres escritos en destino.
-size_t ImprimeLineaHex(char destino[], size_t tamDestino,
-	long offset, const unsigned char datos[], size_t nDatos)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Devuelve el número de bytes leídos, o -1 si no se puede abrir el archivo.
+int LeeBloqueArchivoOk(const char nombre[], unsigned char bloque[], size_t tamBloque)
 {
-	size_t len = 0;
+	FILE* f;
+	if (fopen_s(&f, nombre, "rb") != 0)
+		return -1;
+	int n = (int)fread(bloque, 1, tamBloque, f);
+	fclose(f);
+	return n;
+}
 
-	len += snprintf(destino + len, tamDestino - len, "%08lX  ", offset);
 
-	for (size_t i = 0; i < 16; i++)
-		snprintf(destino + len, tamDestino, "%02X ", datos[i]);
 
+
+
+
+#define TAM_LINEA 16
+// Imprime el valor de un contador y una línea hexadecimal.
+// Devuelve el número de caracteres escritos.
+size_t ImprimeLineaHex(const unsigned char datos[], size_t nDatos, int* pContador)
+{
+	char buffer[TAM_LINEA * 3 + 100];
+	size_t len = snprintf(buffer, sizeof(buffer), "%08X  ", *pContador);
+	for (size_t i = 0; i < TAM_LINEA && i < nDatos; i++) {
+		len += snprintf(buffer + len, sizeof(buffer) - len, "%02X ", datos[i]);
+		(*pContador)++; // incrementa el valor del contador
+	}
+	len= printf("%s\n", buffer);
 	return len;
+}
+
+void Eje1_DumpbinCasi() {
+	unsigned char bloque[TAM_LINEA];
+	int n = LeeBloqueArchivoOk("prueba.bin", bloque, sizeof(bloque));
+	if (n < 0) {
+		printf("Error al abrir el archivo.\n");
+		return;
+	}
+	int contador = 0;
+	ImprimeLineaHex(bloque, (size_t)n, &contador);
 }
