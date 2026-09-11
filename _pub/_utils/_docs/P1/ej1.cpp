@@ -211,16 +211,16 @@ int LeeBloqueArchivo(const char nombre[], unsigned char bloque[])
 	return n;
 }
 
-// Para probarlo, llamar a esta función desde main
+// Para probarlo, llamar a esta función desde main 
+//    con el nombre "prueba.bin"
 // Ejercicio inicial sobre archivos, P1-Sesión 2.
-void Eje1_DumpbinAntesDeEmpezar() {
+void Eje1_DumpbinAntesDeEmpezar(const char nombre[]) {
 	unsigned char bloque[32], var1= 1;
-	int n = LeeBloqueArchivo("prueba.bin", bloque);
+	int n = LeeBloqueArchivo(nombre, bloque);
 	for (int i = 0; i < n; i++)
 		printf("%02X ", bloque[i]);
 	printf("\n");
 }
-
 
 
 
@@ -257,24 +257,25 @@ int LeeBloqueArchivoOk(const char nombre[], unsigned char bloque[], size_t tamBl
 
 
 
-#define TAM_LINEA 16
+#define TAM_BYTES_EN_LINEA 16
 // Imprime el valor de un contador y una línea hexadecimal.
 // Devuelve el número de caracteres escritos.
 size_t ImprimeLineaHex(const unsigned char datos[], size_t nDatos, int* pContador)
 {
-	char buffer[TAM_LINEA * 3 + 100];
+	char buffer[TAM_BYTES_EN_LINEA * 3 + 100];
 	size_t len = snprintf(buffer, sizeof(buffer), "%08X  ", *pContador);
-	for (size_t i = 0; i < TAM_LINEA && i < nDatos; i++) {
-		len += snprintf(buffer + len, sizeof(buffer) - len, "%02X ", datos[i]);
+	for (size_t i = 0; i < TAM_BYTES_EN_LINEA && i < nDatos; i++) {
+		unsigned char dato8= datos[i];
+		len += snprintf(buffer + len, sizeof(buffer) - len, "%02X ", dato8);
 		(*pContador)++; // incrementa el valor del contador
 	}
 	len= printf("%s\n", buffer);
 	return len;
 }
 
-void Eje1_DumpbinCasi() {
-	unsigned char bloque[TAM_LINEA];
-	int n = LeeBloqueArchivoOk("prueba.bin", bloque, sizeof(bloque));
+void Eje1_DumpbinCasi(const char nombre[]) {
+	unsigned char bloque[TAM_BYTES_EN_LINEA];
+	int n = LeeBloqueArchivoOk(nombre, bloque, sizeof(bloque));
 	if (n < 0) {
 		printf("Error al abrir el archivo.\n");
 		return;
