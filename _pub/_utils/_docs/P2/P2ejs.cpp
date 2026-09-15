@@ -135,8 +135,17 @@ void Eje2_EfectosDelAlineamiento() {
 }
 	
 	
+
+
+
+
+
+
 	
 	
+
+
+
 	
 // Declaraciones asociadas a una clase.
 // Namespace: agrupación de clases, funciones y variables globales
@@ -155,6 +164,8 @@ namespace ss {
 	
 } // fin namespace ss
 
+....
+
 // Definiciones asociadas a una clase.
 namespace ss {  // Namespace: agrupación de clases, funciones y variables globales
 
@@ -169,19 +180,25 @@ namespace ss {  // Namespace: agrupación de clases, funciones y variables globa
 
 } // fin namespace ss
 
-void TestClase() {
-	ss::Crono crono;
-	crono.Inicio();
-	Sleep(1200);
-	double segs = crono.Lee();
+
+
+void Eje2_TestClaseCrono() {
+    Crono crono;  	// Declara un objeto de tipo Crono, pero aun no lo usa
+	clock_t inicio = clock();  // inicia medición de tiempo
+
+	Sleep(1200);  // Retraso de 1200 ms (API WIN32)
+	clock_t fin = clock();  // finaliza medición de tiempo
+	double segs = (fin - inicio) / CLOCKS_PER_SEC;
+
 	printf("Han pasado %f segundos.\n", segs);
 }
 
 
 
-/// En Java, la prueba básica de una clase similar a Crono sería
-Crono crono= new Dbg();  
-crono.Inicio();
+
+
+// En Java, la prueba básica de una clase similar a Crono sería
+Crono crono= new Crono();  
 Thread.sleep(1200); // Espera 1200 ms. En C-Windows usaríamos Sleep(1200)
 float segs= crono.Lee();
 System.out.printf("El tiempo transcurrido %f segs\n", segs);
@@ -189,14 +206,39 @@ System.out.printf("El tiempo transcurrido %f segs\n", segs);
 
 
 
-void TestParametros(int valor, int par1, int par2[], Struct1_t par3, Union1_t par4, Clase1 par5) {
+void Eje2_TestParametros(int valor, int par1, int par2[], Struct1_t par3, Union1_t par4, Clase1 par5) {
 	par1 = par2[0]= par3.entero= par4.entero= par5.entero= valor;
 }
 
 
 // Copiar esto a la función main
-TestParametros(10, var1, var2, var3, var4, var5);
+Eje2_TestParametros(10, var1, var2, var3, var4, var5);
 printf("Valores tras la llamada printf: var1=%d, var2[0]=%d, var3.entero=%d, var4.entero=%d, var5.entero=%d\n",
 	var1, var2[0], var3.entero, var4.entero, var5.entero);
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+class TestComeMemoria {
+	char matriz[1024 * 1024 * 10]; // 10 MB
+};
+
+void Eje2_ComeMemoria() 
+{
+	for (int i = 0; i < 1000; ++i) {
+		TestComeMemoria* p = new TestComeMemoria();
+		Sleep(50); // Simula trabajo
+		// delete p; // Descomentar para liberar memoria
+	}
+}
+	
 
 
