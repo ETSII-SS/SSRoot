@@ -1,11 +1,11 @@
 ...
 
-// Copiar esto al mismo archivo donde está main
+// Copiar esto al mismo archivo donde estÃ¡ main
 #define NRO_BYTES sizeof(i)
 void Ej1_Inicial(){
-	clock_t inicio = clock();  // inicia medición de tiempo
+	clock_t inicio = clock();  // inicia mediciÃ³n de tiempo
 
-	//printf("Tamaño de i: %d bytes\n", NRO_BYTES);
+	//printf("TamaÃ±o de i: %d bytes\n", NRO_BYTES);
 	char i;
 	for (i = 1; i > 0; i++)	{
 		printf("%d:0x%02x -> ", i, i);
@@ -13,11 +13,11 @@ void Ej1_Inicial(){
 		printf("\n");
 	}
 
-	clock_t fin = clock();  // finaliza medición de tiempo
+	clock_t fin = clock();  // finaliza mediciÃ³n de tiempo
 	double milisegundos = (fin - inicio) / CLOCKS_PER_SEC * 1000;
 
 	printf(__FUNCTION__ ": Tiempo: %.3f ms\n", milisegundos);
-	printf("Tamaño de i: %d bytes\n", NRO_BYTES);
+	printf("TamaÃ±o de i: %d bytes\n", NRO_BYTES);
 }
 ...
 
@@ -49,7 +49,7 @@ size_t ImprimeBinario(int valor, int bits)
 
 
 
-// Experimento: ¿añadir includes de más modifica el tamaño del código?
+// Experimento: Â¿aÃ±adir includes de mÃ¡s modifica el tamaÃ±o del cÃ³digo?
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -112,9 +112,10 @@ void Ej1_LosFloatsNoSonReales() {
 
 #define LIMITE 0
 typedef char tipo_test_t;
+typedef unsigned char unsigned_tipo_test_t;
 
 void Ej1_InicialCorregido() {
-	clock_t inicio = clock();  // inicia medición de tiempo
+	clock_t inicio = clock();  // inicia mediciÃ³n de tiempo
 
 	tipo_test_t i = 0;
 	// Imprime todos los valores de i
@@ -129,8 +130,8 @@ void Ej1_InicialCorregido() {
 	double milisegundos =
 		1000.0 * (double)(fin - inicio) / CLOCKS_PER_SEC;
 
-	printf(__FUNCTION__ ": Tiempo de ejecución: %.3f ms\n", milisegundos);
-	printf("Tamaño de i: %d bytes\n", NRO_BYTES);
+	printf(__FUNCTION__ ": Tiempo de ejecuciÃ³n: %.3f ms\n", milisegundos);
+	printf("TamaÃ±o de i: %d bytes\n", NRO_BYTES);
 }
 
 
@@ -148,7 +149,7 @@ void Ej1_InicialCorregido() {
 
 
 void Ej1_InicialMasRapido() {
-	clock_t inicio = clock();  // inicia medición de tiempo
+	clock_t inicio = clock();  // inicia mediciÃ³n de tiempo
 
 	int len = 0;
 	char buffer[200];
@@ -165,8 +166,8 @@ void Ej1_InicialMasRapido() {
 	double milisegundos =
 		1000.0 * (double)(fin - inicio) / CLOCKS_PER_SEC;
 
-	printf(__FUNCTION__ ": Tiempo de ejecución: %.3f ms\n", milisegundos);
-	printf("Tamaño de i: %d bytes\n", NRO_BYTES);
+	printf(__FUNCTION__ ": Tiempo de ejecuciÃ³n: %.3f ms\n", milisegundos);
+	printf("TamaÃ±o de i: %d bytes\n", NRO_BYTES);
 }
 
 
@@ -176,7 +177,7 @@ void Ej1_InicialMasRapido() {
 
 
 
-//Versión de ImprimeBinario con con parámetros distintos
+//VersiÃ³n de ImprimeBinario con con parÃ¡metros distintos
 size_t ImprimeBinario(char* buffer, size_t tamBuffer, int valor, int bits)
 {
 	size_t len = 0;
@@ -196,11 +197,11 @@ size_t ImprimeBinario(char* buffer, size_t tamBuffer, int valor, int bits)
 
 
 // ------------------------------------------------------------------
-// Sesión 2: matrices C y archivos
+// SesiÃ³n 2: matrices C y archivos
 // ------------------------------------------------------------------
 
 // Lee los primeros bytes de 'nombre' y los deja en 'bloque'.
-// Devuelve el número de bytes leídos, o -1 si no se puede abrir el archivo.
+// Devuelve el nÃºmero de bytes leÃ­dos, o -1 si no se puede abrir el archivo.
 int LeeBloqueArchivo(const char nombre[], unsigned char bloque[])
 {
 	FILE* f;
@@ -211,9 +212,9 @@ int LeeBloqueArchivo(const char nombre[], unsigned char bloque[])
 	return n;
 }
 
-// Para probarlo, llamar a esta función desde main 
+// Para probarlo, llamar a esta funciÃ³n desde main 
 //    con el nombre "prueba.bin"
-// Ejercicio inicial sobre archivos, P1-Sesión 2.
+// Ejercicio inicial sobre archivos, P1-SesiÃ³n 2.
 void Eje1_DumpbinAntesDeEmpezar(const char nombre[]) {
 	unsigned char bloque[32], var1= 1;
 	int n = LeeBloqueArchivo(nombre, bloque);
@@ -241,7 +242,7 @@ void Eje1_DumpbinAntesDeEmpezar(const char nombre[]) {
 
 
 
-// Devuelve el número de bytes leídos, o -1 si no se puede abrir el archivo.
+// Devuelve el nÃºmero de bytes leÃ­dos, o -1 si no se puede abrir el archivo.
 int LeeBloqueArchivoOk(const char nombre[], unsigned char bloque[], size_t tamBloque)
 {
 	FILE* f;
@@ -258,8 +259,8 @@ int LeeBloqueArchivoOk(const char nombre[], unsigned char bloque[], size_t tamBl
 
 
 #define TAM_BYTES_EN_LINEA 16
-// Imprime el valor de un contador y una línea hexadecimal.
-// Devuelve el número de caracteres escritos.
+// Imprime el valor de un contador y una lÃ­nea hexadecimal.
+// Devuelve el nÃºmero de caracteres escritos.
 size_t ImprimeLineaHex(const unsigned char datos[], size_t nDatos, int* pContador)
 {
 	char buffer[TAM_BYTES_EN_LINEA * 3 + 100];
