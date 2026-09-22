@@ -8,7 +8,7 @@ void ImprimeGhz() {
 	double VelocidadCPUGhz;
 
 	antes = __rdtsc(); // Leo el valor del contador RDTSC y lo guardo
-	Sleep(ESPERA_MS); // Espero un segundo
+	Sleep(ESPERA_MS); // Espero un tiempo determinado (en milisegundos)
 	ahora = __rdtsc();// Leo el valor del contador ahora
 
 	VelocidadCPUGhz = (ahora - antes) / (ESPERA_MS * _1MHzEnHerzios);
@@ -17,7 +17,6 @@ void ImprimeGhz() {
 
 
 #include <stdio.h>
-#include <conio.h>
 #include <locale>
 
 int main(int argc, char* argv[], char* envp[])
