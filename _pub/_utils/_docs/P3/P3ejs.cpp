@@ -17,7 +17,7 @@ MUY IMPORTANTE: No añadir este directamente a ningún proyecto. Copiar siempre 
 		printf("Error: No se ha dado un nombre de directorio correcto:\n(%s)\n", argv[1]);
 		return 2;
 	}
-	if ((atributos & FILE_ATTRIBUTE_DIRECTORY)!=0) {
+	if ((atributos & FILE_ATTRIBUTE_DIRECTORY)==0) {
 		printf("Error: No es un directorio:\n(%s)\n", argv[1]);
 		return 3;
 	}
