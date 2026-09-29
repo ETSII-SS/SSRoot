@@ -11,7 +11,7 @@ MUY IMPORTANTE: No añadir este directamente a ningún proyecto. Copiar siempre 
 	}
 	printf("Mostrando los archivos del directorio:\n%s\n\n", argv[1]);
 
-	// comprueba si el directorio existe
+	// comprueba si el directorio existe. Necesita incluir <Windows.h>
 	DWORD atributos = GetFileAttributesA(argv[1]);
 	if (atributos == INVALID_FILE_ATTRIBUTES) {
 		printf("Error: No se ha dado un nombre de directorio correcto:\n(%s)\n", argv[1]);
@@ -21,5 +21,4 @@ MUY IMPORTANTE: No añadir este directamente a ningún proyecto. Copiar siempre 
 		printf("Error: No es un directorio:\n(%s)\n", argv[1]);
 		return 3;
 	}
-
 	// A partir de aquí, muestra los archivos del directorio:
