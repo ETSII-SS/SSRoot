@@ -61,7 +61,10 @@ void Ej2_EstructuraEnDisco()  //previo
 		(int)sizeof(tEstructura_t));
 	// Guarda un campo en un archivo binario y lo muestra con un visor hexadecimal.
 	GuardaBloqueMemoria("campo_car.bin", &varLocal.car, varLocal.car);
-	Eje1_Dumpbin("campo_car.bin");	// el visor hexadecimal de la P1
+	//Eje1_Dumpbin("campo_car.bin");	
+	   /* el visor hexadecimal de la P1. También puede usar el editor binario de Visual Studio, 
+			ver https://learn.microsoft.com/es-es/cpp/windows/binary-editor?view=msvc-180
+		*/
 }
 
 
