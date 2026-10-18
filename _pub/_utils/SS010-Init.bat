@@ -104,7 +104,15 @@ echo --- 1. Comprobando git ----------------------------------------------------
 call :FindGit
 if errorlevel 1 goto :Fin
 echo   [ OK ] git: %SSGIT%
-for /f "usebackq delims=" %%V in (`"%SSGIT%" --version 2^>nul`) do echo   [ OK ] %%V
+rem  NOTA SOBRE "call" EN LOS for /f
+rem  for /f ejecuta la orden con "cmd /c". Si la orden empieza por comillas
+rem  y tiene mas de dos, cmd /c quita la primera y la ultima, y
+rem     "C:\Program Files\Git\cmd\git.exe" -C "ruta" ...
+rem  se convierte en
+rem     C:\Program Files\Git\cmd\git.exe" -C "ruta ...
+rem  que falla con "'C:\Program' no se reconoce...". Poniendo "call" delante,
+rem  la orden ya no empieza por comillas y cmd /c las respeta.
+for /f "usebackq delims=" %%V in (`call "%SSGIT%" --version 2^>nul`) do echo   [ OK ] %%V
 if "%SSGIT_INPATH%"=="0" echo   [ .. ] git no esta en el PATH. No hace falta para estos scripts.
 echo.
 
@@ -273,7 +281,15 @@ echo.
 echo --- 4. Identificacion ------------------------------------------------------
 set "SS_UVUS="
 set "SS_DEST="
+set "SS_CURSO_CFG="
+set "SS_CURSO_OK=%SS_CURSO%"
+set "SS_RAMA_OK=%SS_RAMA%"
 if exist "%PRIVDIR%\SS-Config.cmd" call "%PRIVDIR%\SS-Config.cmd" >nul 2>&1
+rem  Las versiones anteriores de este script guardaban SS_CURSO y SS_RAMA en
+rem  SS-Config.cmd; al llamarlo machacarian los valores del curso actual.
+rem  Se restauran. Ahora se guarda SS_CURSO_CFG, igual que SS020-Guardar.bat.
+set "SS_CURSO=%SS_CURSO_OK%"
+set "SS_RAMA=%SS_RAMA_OK%"
 if defined SS_UVUS echo   UVUS guardado de una ejecucion anterior: %SS_UVUS%
 if defined SS_UVUS goto :UvusListo
 :PedirUvus
@@ -286,7 +302,7 @@ if not defined SS_UVUS goto :PedirUvus
 :UvusListo
 
 set "IDNAME="
-for /f "usebackq delims=" %%N in (`"%SSGIT%" -C "%PRIVDIR%" config --get user.name 2^>nul`) do set "IDNAME=%%N"
+for /f "usebackq delims=" %%N in (`call "%SSGIT%" -C "%PRIVDIR%" config --get user.name 2^>nul`) do set "IDNAME=%%N"
 if defined IDNAME goto :PrimerCommit
 "%SSGIT%" -C "%PRIVDIR%" config --local user.name "%SS_UVUS%"
 "%SSGIT%" -C "%PRIVDIR%" config --local user.email "%SS_UVUS%@alum.us.es"
@@ -326,8 +342,7 @@ echo --- 6. Guardando configuracion --------------------------------------------
 set "CFG=%PRIVDIR%\SS-Config.cmd"
 >"%CFG%"  echo @rem Configuracion local generada por los scripts de Software de Sistemas.
 >>"%CFG%" echo @rem Especifica de este equipo. Ignorada por Git: no viaja en las copias.
->>"%CFG%" echo set "SS_CURSO=%SS_CURSO%"
->>"%CFG%" echo set "SS_RAMA=%SS_RAMA%"
+>>"%CFG%" echo set "SS_CURSO_CFG=%SS_CURSO%"
 >>"%CFG%" echo set "SS_UVUS=%SS_UVUS%"
 if defined SS_DEST >>"%CFG%" echo set "SS_DEST=%SS_DEST%"
 if exist "%CFG%" echo   [ OK ] %CFG%
@@ -407,7 +422,7 @@ rem  :LeeRama   Deja en %RAMA% la rama actual del repositorio.
 rem =============================================================================
 :LeeRama
 set "RAMA="
-for /f "usebackq delims=" %%B in (`"%SSGIT%" -C "%SSROOT%" branch --show-current 2^>nul`) do set "RAMA=%%B"
+for /f "usebackq delims=" %%B in (`call "%SSGIT%" -C "%SSROOT%" branch --show-current 2^>nul`) do set "RAMA=%%B"
 if not defined RAMA set "RAMA=(no se ha podido leer)"
 exit /b 0
 
@@ -462,7 +477,7 @@ if defined SSGIT exit /b 0
 set "VSWHERE=%PF86%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist "%VSWHERE%" set "VSWHERE=%ProgramFiles%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist "%VSWHERE%" goto :NoHayGit
-for /f "usebackq delims=" %%P in (`"%VSWHERE%" -latest -products * -property installationPath 2^>nul`) do call :ProbarGitVS "%%P"
+for /f "usebackq delims=" %%P in (`call "%VSWHERE%" -latest -products * -property installationPath 2^>nul`) do call :ProbarGitVS "%%P"
 if defined SSGIT exit /b 0
 :NoHayGit
 echo   [ERROR] No se ha encontrado git.exe en este equipo.

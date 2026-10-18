@@ -92,7 +92,15 @@ echo.
 rem ================== 1. Registrar los cambios pendientes =====================
 echo --- 1. Revisando su trabajo ------------------------------------------------
 set "SUCIO="
-for /f "usebackq delims=" %%S in (`"%SSGIT%" -C "%PRIVDIR%" status --porcelain 2^>nul`) do set "SUCIO=1"
+rem  NOTA SOBRE "call" EN LOS for /f
+rem  for /f ejecuta la orden con "cmd /c". Si la orden empieza por comillas
+rem  y tiene mas de dos, cmd /c quita la primera y la ultima, y
+rem     "C:\Program Files\Git\cmd\git.exe" -C "ruta" ...
+rem  se convierte en
+rem     C:\Program Files\Git\cmd\git.exe" -C "ruta ...
+rem  que falla con "'C:\Program' no se reconoce...". Poniendo "call" delante,
+rem  la orden ya no empieza por comillas y cmd /c las respeta.
+for /f "usebackq delims=" %%S in (`call "%SSGIT%" -C "%PRIVDIR%" status --porcelain 2^>nul`) do set "SUCIO=1"
 if not defined SUCIO goto :NadaPendiente
 
 echo   Tiene cambios sin registrar (sin commit). Las copias SOLO guardan lo
@@ -298,7 +306,7 @@ if defined SSGIT exit /b 0
 set "VSWHERE=%PF86%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist "%VSWHERE%" set "VSWHERE=%ProgramFiles%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist "%VSWHERE%" goto :NoHayGit
-for /f "usebackq delims=" %%P in (`"%VSWHERE%" -latest -products * -property installationPath 2^>nul`) do call :ProbarGitVS "%%P"
+for /f "usebackq delims=" %%P in (`call "%VSWHERE%" -latest -products * -property installationPath 2^>nul`) do call :ProbarGitVS "%%P"
 if defined SSGIT exit /b 0
 :NoHayGit
 echo [ERROR] No se ha encontrado git.exe. Vea el Anexo A.
