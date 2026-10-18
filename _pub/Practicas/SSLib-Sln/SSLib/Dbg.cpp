@@ -142,6 +142,8 @@ namespace ss {
 					OutputDebugStringA("\n"); // OutputDebugStringA no da salida hasta que se le envia un caracter new line
 				//Sleep(1000); // Espera para que termine de conectar depurador.
 			}
+			if (_salidaPantalla)
+				printf("%s", buffer); // Imprime en la consola de salida
 		}
 		return ret;
 	}
