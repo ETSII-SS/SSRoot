@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="VisorHexPrj26/VisorHexPrj26.vcxproj" Id="f2e65089-ad92-4b28-ae80-fcfeb8b9c347" />
+</Solution>
