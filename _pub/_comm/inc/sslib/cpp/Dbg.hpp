@@ -62,6 +62,10 @@ namespace ss {
 		/// Funciona igual que printf, pero muestra la salida solo por la ventana de salida (depuración) y por consola (opcional)
 		/// </summary>
 		int DbgPrint(const char* formatString, ...);
+		/// <summary>
+		/// devuelve un número entero sin signo aleatorio entre 0 y max-1
+		unsigned int Random(unsigned int max);
+	
 	};
 
 } // Fin namespace

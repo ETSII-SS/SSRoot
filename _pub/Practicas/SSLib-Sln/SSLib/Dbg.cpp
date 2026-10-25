@@ -1,8 +1,11 @@
 #define _LIB_EXPORTS_
 
 #define _LIB_EXPORTS_
+#define _CRT_RAND_S          // primera línea de Dbg.cpp, antes de cualquier include
 #include "sslib\SSLib.h"
 #include <cstdarg>
+#include <ctime>
+#include <cstdlib>
 
 
 #define TAM_BUFFER_DbgPrint 1024
@@ -146,5 +149,12 @@ namespace ss {
 				printf("%s", buffer); // Imprime en la consola de salida
 		}
 		return ret;
+	}
+	unsigned int Dbg::Random(unsigned int max)
+	{
+		unsigned int valor = 0;
+		if (max == 0 || rand_s(&valor) != 0)
+			return 0;
+		return valor % max;    // rand_s no necesita semilla y es seguro entre hilos
 	}
 } // Fin namespace

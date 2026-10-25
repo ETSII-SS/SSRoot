@@ -8,7 +8,11 @@ static Dbg dbg(true); // Salida por pantalla y por depuración
 int main(int argc, char* argv[], char* envp[])
 {
 	setlocale(LC_ALL, "Spanish");
-	
+	for	(int i = 0; i < 10; i++) {
+		Dbg dbgLocal;
+		dbgLocal.DbgPrint("%u %u \n", dbgLocal.Random(100), dbgLocal.Random(100));
+	}
+
 	FileSys fs;
 
 	dbg.DbgPrint("Versión de la biblioteca: %s\n", dbg.Vesion); // Muestra la versión de la biblioteca por la ventana de depuración
