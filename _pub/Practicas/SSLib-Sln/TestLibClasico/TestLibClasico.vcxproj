@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="PruebaBuscaDato.cpp" />
     <ClCompile Include="TestLibClasico.cpp" />
     <ClCompile Include="TestP5_2025.cpp" />
   </ItemGroup>

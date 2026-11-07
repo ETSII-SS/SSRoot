@@ -278,43 +278,61 @@ FileSys::~FileSys()
 // el tamaño del archivo. 
 int FileSys::BuscaDatoEnArchivo(const char* block, size_t blockSize, const char* fileName,
 	size_t* bytesPorAhora, int tamBuffer) {
+	if (_dbg.CheckError(tamBuffer <= 0, __FUNCTION__ ": Tamaño del buffer debe ser mayor que 0\n")) {
+		return -1;
+	}
+	if (_dbg.CheckError(block == nullptr || blockSize == 0, __FUNCTION__ ": El bloque a buscar está vacío\n")) {
+		return -1;
+	}
 	// Abre archivo
 	FILE* file_ptr;
 	file_ptr = fopen(fileName, "rb");
-	int res = 0;
-	if (_dbg.CheckError(tamBuffer == 0, __FUNCTION__ ": Tamaño del buffer debe ser mayor que 0\n")) {
-		return -1;
-	}
 	if (_dbg.CheckError(file_ptr == NULL, __FUNCTION__ ": No se pudo abrir el archivo %s\n", fileName)) {
 		// comprueba si el archivo está en uso
 		WIN32_FILE_ATTRIBUTE_DATA info;
 		if (GetFileAttributesExA(fileName, GetFileExInfoStandard, &info)) {
 			// Si no se puede abrir, añade a los bytes procesados el tamaño del archivo.
-			*bytesPorAhora += ((int64_t)info.nFileSizeHigh >> 32) + info.nFileSizeLow;
+			*bytesPorAhora += ((int64_t)info.nFileSizeHigh << 32) + info.nFileSizeLow;
 		}
 		return -1;
 	}
+	// Tabla de fallos del algoritmo de Knuth-Morris-Pratt (KMP).
+	// fallo[k]: longitud del prefijo más largo de block que también es sufijo de block[0..k]
+	// (sin contar el propio block[0..k]). Si una coincidencia parcial de k+1 bytes falla,
+	// la búsqueda sigue desde fallo[k] bytes ya coincidentes en lugar de desde 0, y vuelve
+	// a comparar el byte actual. Así no se pierde una ocurrencia que empieza dentro de lo
+	// ya comparado ("ab" en "aab", "aab" en "aaab"), y nunca hay que retroceder en el archivo.
+	size_t* fallo = new size_t[blockSize];
+	fallo[0] = 0;
+	for (size_t k = 1, lon = 0; k < blockSize; k++) {
+		while (lon > 0 && block[k] != block[lon])
+			lon = fallo[lon - 1];
+		if (block[k] == block[lon])
+			lon++;
+		fallo[k] = lon;
+	}
+	int res = 0;
 	char* buffer = new char[tamBuffer];
-	int idxBusqueda = 0;
+	size_t idxBusqueda = 0;	// bytes de block que coinciden hasta ahora. Se conserva entre lecturas
 	size_t bytesRead = fread(buffer, 1, tamBuffer, file_ptr);
 	while (bytesRead > 0) {
 		*bytesPorAhora += bytesRead;
 		for (size_t i = 0; i < bytesRead; i++) {
+			while (idxBusqueda > 0 && buffer[i] != block[idxBusqueda])
+				idxBusqueda = fallo[idxBusqueda - 1];
 			if (buffer[i] == block[idxBusqueda]) {
 				idxBusqueda++;
 				if (idxBusqueda == blockSize) {
 					res++;
-					idxBusqueda = 0;
+					idxBusqueda = 0;	// ocurrencias sin solapar, como hasta ahora
 				}
-			}
-			else {
-				idxBusqueda = 0;
 			}
 		}
 		bytesRead = fread(buffer, 1, tamBuffer, file_ptr);
 	}
 	fclose(file_ptr);
 	delete[] buffer;  // delete aplicado a matriz.
+	delete[] fallo;
 
 	return res;
 }
@@ -324,12 +342,36 @@ int FileSys::BuscaDatoEnArchivo(const char* block, size_t blockSize, const char*
 // 0000000000;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 #define FORMMATO_LINEA_TEST        "0000000000;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\n"
 #define FORMATO_LINEA_TEST_PARA_PRINTF "%010d;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\n"
-bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, size_t tamBuffer, int64_t* pCuantoLLeva)
+bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool CreaSiempre, size_t tamBuffer, int64_t* pCuantoLLeva)
 {
 	bool res = false;
 	if (tamBuffer < 1)
 		tamBuffer = 1;
 	try {
+		// Si el archivo ya existe y tiene el mismo tamaño y no se debe crear siempre, no hace nada y devuelve true
+		if (!CreaSiempre && PathFileExistsA(nombre))
+		{
+			// Comprueba el tamaño del archivo
+			WIN32_FILE_ATTRIBUTE_DATA attrs;
+			if (GetFileAttributesExA(nombre, GetFileExInfoStandard, &attrs))
+			{
+				if ((attrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
+				{
+					ULARGE_INTEGER tamExistente;
+					tamExistente.HighPart = attrs.nFileSizeHigh;
+					tamExistente.LowPart = attrs.nFileSizeLow;
+					if (tamExistente.QuadPart == tamArchivo)
+					{
+						if (pCuantoLLeva != nullptr)
+							*pCuantoLLeva = (int64_t)tamArchivo;
+						_dbg.DbgPrint("Archivo de test ya existente con el mismo tamaño (%llu bytes):\n%s\n",
+							tamArchivo, nombre);
+						return true;
+					}
+				}
+			}
+		}
+		 
 		// Crear el archivo de prueba
 		HANDLE hFile = CreateFileA(nombre, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (!_dbg.CheckError(hFile == INVALID_HANDLE_VALUE, "No se pudo crear el archivo %s\n", nombre))
@@ -427,7 +469,7 @@ bool FileSys::AbreArchivoParaEscritura(const char* nombreArchivo)
 {
 	CierraArchivoEscritura();
 	_hArchivoEscritura = CreateFileA(nombreArchivo, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	bool res = _hArchivoLectura != INVALID_HANDLE_VALUE;
+	bool res = _hArchivoEscritura != INVALID_HANDLE_VALUE;
 	if (res)
 	{
 		strncpy_s(_ultimoNombreArchivoEscritura, MAX_PATH, nombreArchivo, _TRUNCATE);

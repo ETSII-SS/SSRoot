@@ -69,9 +69,10 @@ namespace ss {
 /// </summary>
 /// <param name="nombre">Nombre del archivo</param>
 /// <param name="tamArchivo">Tamaño archivo</param>
+/// <param name="CreaSiempre">Si es true, se crea el archivo incluso si ya existe</param>
 /// <param name="tamBuffer">tamaño buffer de escritura (1 mínimo) ¿cuanto mayor el buffer, más rápidas las escrituras?</param>
 /// <returns></returns>
-		bool CreaArchivoTest(const char* nombre, uint64_t tamArchivo, size_t tamBuffer = 1024, int64_t* pCuantoLleva = nullptr);
+		bool CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool CreaSiempre = false, size_t tamBuffer = 1024, int64_t* pCuantoLleva = nullptr);
 		/// <summary>
 		/// Abre un archivo para lectura 
 		/// </summary>
@@ -81,7 +82,7 @@ namespace ss {
 		/// <summary>
 		/// Lee un bloque de datos del archivo abierto para lectura
 		/// </summary>
-		/// <param name="nombreArchivo">Nombre del archivo (solo para mensajes de error)</param>
+		/// <param name="nombreArchivo">Nombre de archivo</param>
 		/// <param name="pBuffer">Puntero al buffer donde se leen los datos</param>
 		/// <param name="tamBuffer">Tamaño del buffer</param>
 		/// <param name="pLeidos">Número de bytes leídos</param>

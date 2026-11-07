@@ -8,16 +8,19 @@ static Dbg dbg(true); // Salida por pantalla y por depuración
 int main(int argc, char* argv[], char* envp[])
 {
 	setlocale(LC_ALL, "Spanish");
-	for	(int i = 0; i < 10; i++) {
-		Dbg dbgLocal;
-		dbgLocal.DbgPrint("%u %u \n", dbgLocal.Random(100), dbgLocal.Random(100));
-	}
-
+	//for	(int i = 0; i < 10; i++) {
+	//	Dbg dbgLocal;
+	//	dbgLocal.DbgPrint("%u %u \n", dbgLocal.Random(100), dbgLocal.Random(100));
+	//}
 	FileSys fs;
 
 	dbg.DbgPrint("Versión de la biblioteca: %s\n", dbg.Vesion); // Muestra la versión de la biblioteca por la ventana de depuración
-
-	TestP5_2025_main(argc, argv, envp); 
+	bool PruebaBuscaDatoEnArchivo();
+	bool res = PruebaBuscaDatoEnArchivo();
+	dbg.CheckError(!res, "La prueba de BuscaDatoEnArchivo falló.\n");
+	fs.CreaArchivoTest("c:/tmp/archivoTest.txt", 10000);
+	fs.CreaArchivoTest("c:\\tmp\\archivoTest.txt", 10000, false);
+	//TestP5_2025_main(argc, argv, envp); 
 
 	int encontrados;
 	const char *pDir= "..";
@@ -67,7 +70,7 @@ static size_t CalculaBytesEnArchivos(char* listaArchivos[], int nroArchivos) {
 			GetFileAttributesExA(listaArchivos[i], GetFileExInfoStandard, &info),
 			"Error en GetFileAttributesExA para el archivo %s\n", listaArchivos[i]))
 			continue;  // Salta a la siguiente iteración del bucle si hay error
-		int64_t tam = ((int64_t)info.nFileSizeHigh >> 32) + info.nFileSizeLow;
+		int64_t tam = ((int64_t)info.nFileSizeHigh << 32) + info.nFileSizeLow;
 		total += tam;
 	}
 	return total;

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClCompile Include="TestLibClasico.cpp" />
     <ClCompile Include="TestP5_2025.cpp" />
+    <ClCompile Include="PruebaBuscaDato.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestLibClasico.h" />
