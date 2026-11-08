@@ -8,17 +8,22 @@ static Dbg dbg(true); // Salida por pantalla y por depuración
 int main(int argc, char* argv[], char* envp[])
 {
 	setlocale(LC_ALL, "Spanish");
+	TestP4_2026_main(argc, argv, envp);	
 	//for	(int i = 0; i < 10; i++) {
-	//	Dbg dbgLocal;
-	//	dbgLocal.DbgPrint("%u %u \n", dbgLocal.Random(100), dbgLocal.Random(100));
+	//	//dbg.DbgPrint("%d, ", i);
+	//	dbg.CheckError(true, "%d-", i); 
 	//}
+	{
+		// prueba constructor/desctructor de la clase Sha256
+		Sha256 sha;
+	}
 	FileSys fs;
 
 	dbg.DbgPrint("Versión de la biblioteca: %s\n", dbg.Vesion); // Muestra la versión de la biblioteca por la ventana de depuración
-	bool PruebaBuscaDatoEnArchivo();
-	bool res = PruebaBuscaDatoEnArchivo();
-	dbg.CheckError(!res, "La prueba de BuscaDatoEnArchivo falló.\n");
-	fs.CreaArchivoTest("c:/tmp/archivoTest.txt", 10000);
+	//bool PruebaBuscaDatoEnArchivo();
+	//bool res = PruebaBuscaDatoEnArchivo();
+	//dbg.CheckError(!res, "La prueba de BuscaDatoEnArchivo falló.\n");
+	fs.CreaArchivoTest("c:/tmp/archivoTest.txt", 100*1024*1024);
 	fs.CreaArchivoTest("c:\\tmp\\archivoTest.txt", 10000, false);
 	//TestP5_2025_main(argc, argv, envp); 
 

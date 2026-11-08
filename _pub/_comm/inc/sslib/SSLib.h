@@ -15,6 +15,8 @@
 #include "sslib\cpp\Dbg.hpp"
 #include "sslib\cpp\Crono.hpp"
 #include "sslib\cpp\Filesys.hpp"
+#include "sslib\cpp\Sha256.hpp"
+
 #endif
 
 #include <Windows.h>

@@ -196,11 +196,14 @@ robocopy  "$(ProjectDir)sslib" "$(AAComm)inc\sslib" /e &amp; IF %ERRORLEVEL% LSS
     <ClCompile Include="Dbg.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Filesys.cpp" />
+    <ClCompile Include="P4S2Test.cpp" />
+    <ClCompile Include="Sha256.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sslib\cpp\Crono.hpp" />
     <ClInclude Include="sslib\cpp\Dbg.hpp" />
     <ClInclude Include="sslib\cpp\Filesys.hpp" />
+    <ClInclude Include="sslib\cpp\Sha256.hpp" />
     <ClInclude Include="sslib\c\CUtils.h" />
     <ClInclude Include="sslib\SSLib.h" />
   </ItemGroup>

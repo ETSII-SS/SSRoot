@@ -6,6 +6,8 @@
     <ClCompile Include="Dbg.cpp" />
     <ClCompile Include="Crono.cpp" />
     <ClCompile Include="Filesys.cpp" />
+    <ClCompile Include="Sha256.cpp" />
+    <ClCompile Include="P4S2Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="sslib">
@@ -32,6 +34,9 @@
       <Filter>sslib\c</Filter>
     </ClInclude>
     <ClInclude Include="sslib\cpp\Filesys.hpp">
+      <Filter>sslib\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="sslib\cpp\Sha256.hpp">
       <Filter>sslib\cpp</Filter>
     </ClInclude>
   </ItemGroup>

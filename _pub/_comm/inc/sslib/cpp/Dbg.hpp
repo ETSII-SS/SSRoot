@@ -5,6 +5,8 @@
 #include <Windows.h>
 
 #include "Crono.hpp"
+#define _DIR_DATOS_PRUEBA "C:\\tmp"
+#define _DIR_DATOS_PRUEBA_P4S2_POR_DEFECTO _DIR_DATOS_PRUEBA "\\P4S2"
 
 using namespace std;
 
@@ -65,7 +67,11 @@ namespace ss {
 		/// <summary>
 		/// devuelve un número entero sin signo aleatorio entre 0 y max-1
 		unsigned int Random(unsigned int max);
-	
+		/// <summary>
+		/// Crea datos de prueba para la práctica 4, sesión 2
+		/// <param name="directorio">Directorio donde se crean los datos de prueba. Por defecto es DIR_DATOS_PRUEBA</param>
+		/// </summary>
+		bool P4S2_CreaDatosPrueba(const char* directorio= _DIR_DATOS_PRUEBA);
 	};
 
 } // Fin namespace

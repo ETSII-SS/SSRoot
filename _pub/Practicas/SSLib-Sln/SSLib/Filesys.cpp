@@ -14,6 +14,7 @@ char* FileSys::BuscaArchivo(const char* directorioDondeSeBusca, const char* nomb
 {
 	char* res = nullptr;
 	_tiempoUltimoMetodo = 0.0;
+	_dbg.CronoInicio();
 	// Comprueba los parámetros usando CheckError
 	if (_dbg.CheckError(directorioDondeSeBusca == nullptr, __FUNCTION__ ": directorioDondeSeBusca es null.\n")
 		|| _dbg.CheckError(nombreArchivo == nullptr, __FUNCTION__ ": nombreArchivo es null.\n"))
@@ -43,7 +44,7 @@ double ss::FileSys::TiempoUltimoMetodo()
 {
 	return _tiempoUltimoMetodo;
 }
-void FileSys::CuentaBytesNombreArchivo(const char* nombreDir, bool notificaErroresAcceso)
+void FileSys::CuentaBytesNombresArchivos(const char* nombreDir, bool notificaErroresAcceso)
 {
 	char ruta[SSLIB_MAX_RUTA];
 
@@ -70,7 +71,7 @@ void FileSys::CuentaBytesNombreArchivo(const char* nombreDir, bool notificaError
 		size_t bytesNombreArchivo = NormalizaRutaGrande(ruta, sizeof(ruta)) + 1;
 		if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Si es un directorio
 		{
-			CuentaBytesNombreArchivo(ruta, notificaErroresAcceso); // Llama recursivamente
+			CuentaBytesNombresArchivos(ruta, notificaErroresAcceso); // Llama recursivamente
 		}
 		else
 		{
@@ -219,7 +220,7 @@ char** FileSys::ArchivosEnDirectorio(int* encontrados, const char* nombreDir, bo
 	_pListaArchivos = _pListaArchivos = nullptr;
 
 	// Fin de comprobacibes previas. Enpieza el trabajo efectivo
-	CuentaBytesNombreArchivo(rutaDir, notificaErroresAcceso);
+	CuentaBytesNombresArchivos(rutaDir, notificaErroresAcceso);
 	if (_dbg.CheckError(_nroArchivos == 0, __FUNCTION__ ": No se han encontrado archivos en el directorio.\n"))
 	{
 		return nullptr;
@@ -278,6 +279,8 @@ FileSys::~FileSys()
 // el tamaño del archivo. 
 int FileSys::BuscaDatoEnArchivo(const char* block, size_t blockSize, const char* fileName,
 	size_t* bytesPorAhora, int tamBuffer) {
+	_tiempoUltimoMetodo = 0.0;
+	_dbg.CronoInicio();
 	if (_dbg.CheckError(tamBuffer <= 0, __FUNCTION__ ": Tamaño del buffer debe ser mayor que 0\n")) {
 		return -1;
 	}
@@ -333,7 +336,7 @@ int FileSys::BuscaDatoEnArchivo(const char* block, size_t blockSize, const char*
 	fclose(file_ptr);
 	delete[] buffer;  // delete aplicado a matriz.
 	delete[] fallo;
-
+	_tiempoUltimoMetodo = _dbg.CronoLee();
 	return res;
 }
 
@@ -342,14 +345,16 @@ int FileSys::BuscaDatoEnArchivo(const char* block, size_t blockSize, const char*
 // 0000000000;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 #define FORMMATO_LINEA_TEST        "0000000000;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\n"
 #define FORMATO_LINEA_TEST_PARA_PRINTF "%010d;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\n"
-bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool CreaSiempre, size_t tamBuffer, int64_t* pCuantoLLeva)
+bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool creaSiempre, size_t tamBuffer, int64_t* pCuantoLLeva)
 {
+	_tiempoUltimoMetodo = 0.0;
+	_dbg.CronoInicio();
 	bool res = false;
 	if (tamBuffer < 1)
 		tamBuffer = 1;
 	try {
 		// Si el archivo ya existe y tiene el mismo tamaño y no se debe crear siempre, no hace nada y devuelve true
-		if (!CreaSiempre && PathFileExistsA(nombre))
+		if (!creaSiempre && PathFileExistsA(nombre))
 		{
 			// Comprueba el tamaño del archivo
 			WIN32_FILE_ATTRIBUTE_DATA attrs;
@@ -362,11 +367,16 @@ bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool Crea
 					tamExistente.LowPart = attrs.nFileSizeLow;
 					if (tamExistente.QuadPart == tamArchivo)
 					{
-						if (pCuantoLLeva != nullptr)
-							*pCuantoLLeva = (int64_t)tamArchivo;
-						_dbg.DbgPrint("Archivo de test ya existente con el mismo tamaño (%llu bytes):\n%s\n",
-							tamArchivo, nombre);
-						return true;
+						// Comprueba si la fecha de modificación y de creación son iguales
+						if (attrs.ftLastWriteTime.dwLowDateTime == attrs.ftCreationTime.dwLowDateTime &&
+							attrs.ftLastWriteTime.dwHighDateTime == attrs.ftCreationTime.dwHighDateTime)
+						{
+							if (pCuantoLLeva != nullptr)
+								*pCuantoLLeva = (int64_t)tamArchivo;
+							_dbg.DbgPrint("Archivo de test ya existente, mismo tamaño y no modificado desde su creación (%llu bytes):\n%s\n",
+								tamArchivo, nombre);
+							return true;
+						}
 					}
 				}
 			}
@@ -413,6 +423,16 @@ bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool Crea
 					break;
 			}
 			CloseHandle(hFile);
+			FILETIME ahora;
+			GetSystemTimeAsFileTime(&ahora);
+			HANDLE hFileAtrib = CreateFileA(nombre, FILE_WRITE_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+				NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			if (!_dbg.CheckError(hFileAtrib == INVALID_HANDLE_VALUE,
+				"No se pudo abrir el archivo para ajustar fechas %s\n", nombre)) {
+				_dbg.CheckError(FALSE == SetFileTime(hFileAtrib, &ahora, nullptr, &ahora),
+					"Error ajustando fechas de creación/modificación del archivo de test %s\n", nombre);
+				CloseHandle(hFileAtrib);
+			}
 			res = nroEscrituras == (int64_t)tamArchivo;
 			_dbg.CheckError(!res,
 				"Error: el tamaño escrito en el archivo de test %s es incorrecto. Esperado: %llu bytes, escritos: %llu bytes\n",
@@ -421,15 +441,20 @@ bool FileSys::CreaArchivoTest(const char* nombre, uint64_t tamArchivo, bool Crea
 				_dbg.DbgPrint("Creado archivo de test (%d bytes, buffer: %d):\n%s\n",
 					tamArchivo, tamBuffer, nombre);
 			delete[] pbuffer;
+			// Modifica fecha de creación y modificación del archivo para que sean iguales, usando SetFileTime
 			res = true;
 		}
 	}
 	catch (const std::exception& e) {
 		_dbg.DbgPrint("Excepción al crear archivo de test %s: %s\n", nombre, e.what());
 	}
+	_tiempoUltimoMetodo = _dbg.CronoLee();
 	return res;
 }
 
+
+/* Metodos usados en el curso 2025 */
+/*
 bool FileSys::AbreArchivoParaLectura(const char* nombreArchivo)
 {
 	CierraArchivoLectura();
@@ -505,3 +530,4 @@ bool FileSys::EscribeBloque(const char* nombreArchivo, const uint8_t* pBuffer, s
 	return res;
 }
 
+*/

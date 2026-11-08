@@ -141,7 +141,8 @@
   <ItemGroup>
     <ClCompile Include="PruebaBuscaDato.cpp" />
     <ClCompile Include="TestLibClasico.cpp" />
-    <ClCompile Include="TestP5_2025.cpp" />
+    <ClCompile Include="TestP4_2026.cpp" />
+    <ClCompile Include="TestP5_2026.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SSLib\SSLib.vcxproj">

@@ -141,9 +141,9 @@ namespace ss {
 			BOOL debuggerPresent = FALSE;
 			if (CheckRemoteDebuggerPresent(GetCurrentProcess(), &debuggerPresent) && debuggerPresent) {
 				OutputDebugStringA(buffer); // Imprime en la ventana de salida de depuración
-				if (buffer[ret - 1] != '\n')
-					OutputDebugStringA("\n"); // OutputDebugStringA no da salida hasta que se le envia un caracter new line
-				//Sleep(1000); // Espera para que termine de conectar depurador.
+				//if (buffer[ret - 1] != '\n')
+				//	OutputDebugStringA("\n"); // OutputDebugStringA no da salida hasta que se le envia un caracter new line
+				////Sleep(1000); // Espera para que termine de conectar depurador.
 			}
 			if (_salidaPantalla)
 				printf("%s", buffer); // Imprime en la consola de salida
