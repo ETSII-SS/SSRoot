@@ -55,8 +55,8 @@ int main(int argc, char* argv[]){
 
 
 
+
 // Calcula la huella SHA-256 del archivo ruta. Es ProcesaRuta, de la práctica 4, ya terminada.
-// Devuelve false si el archivo no se puede abrir o leer.
 // Deja en cadHash la huella en hexadecimal y en *pTamArchivo el número de bytes leídos.
 void CalculaHuella(const char* ruta, char cadHash[], int64_t* pTamArchivo) {
 	Sha256 sha; // Objeto para calcular el hash256
@@ -134,7 +134,6 @@ bool InvierteBit(const char* ruta, int64_t posicion, int bit)
 	CloseHandle(hArchivo);
 	return ok;
 }
-
 
 
 
