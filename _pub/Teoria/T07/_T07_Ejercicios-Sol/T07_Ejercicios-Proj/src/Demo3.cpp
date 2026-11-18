@@ -15,44 +15,47 @@ char TablaNombres[][20]
 ;
 
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	char Resultado[200];
 	int nroElementos;
-	HANDLE hf;
+	HANDLE hf[3];
 	DWORD Escritos;
-	char * NArchivo = "Tabla1.dat";
+	char* NArchivos[]= { "Tabla1.bin", "Tabla2.bin", "Tabla3.bin" };
 
 
 	nroElementos = sizeof(TablaNombres) / sizeof(TablaNombres[0]);
 
 	setlocale(LC_ALL, "Spanish");
-
-	hf = CreateFile(NArchivo, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	CheckError(INVALID_HANDLE_VALUE == hf, 1, "No se pudo abrir el archivo para escribir");
+	for (int i = 0; i < sizeof(hf)/sizeof(hf[0]); i++) {
+		hf[i] = CreateFile(NArchivos[i], GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		CheckError(INVALID_HANDLE_VALUE == hf[i], 1, "No se pudo abrir el archivo para escribir");
+	}
 
 	// Alternativas para escribir la tabla en un archivo? 
 	//1
-	CheckError(FALSE == WriteFile(hf, TablaNombres, sizeof(TablaNombres), &Escritos, NULL)
+	CheckError(FALSE == WriteFile(hf[0], TablaNombres, sizeof(TablaNombres), &Escritos, NULL)
 		|| sizeof(TablaNombres) != Escritos, 1, "No se pudo escribir (1)");
 
 	////2
-	for (int i = 0; i < nroElementos; i++)	{
-		CheckError(FALSE == WriteFile(hf, TablaNombres[i], sizeof(TablaNombres[i]), &Escritos, NULL)
+	for (int i = 0; i < nroElementos; i++) {
+		CheckError(FALSE == WriteFile(hf[1], TablaNombres[i], sizeof(TablaNombres[i]), &Escritos, NULL)
 			|| sizeof(TablaNombres[i]) != Escritos, 1, "No se pudo escribir (2)");
 	}
 
 	////3
-	for (int i = 0; i < nroElementos; i++) 	{
-		CheckError(FALSE == WriteFile(hf, TablaNombres[i], strlen(TablaNombres[i]) + 1, &Escritos, NULL)
+	for (int i = 0; i < nroElementos; i++) {
+		CheckError(FALSE == WriteFile(hf[2], TablaNombres[i], strlen(TablaNombres[i]) + 1, &Escritos, NULL)
 			|| (strlen(TablaNombres[i]) + 1) != Escritos, 1, "No se pudo escribir (3)");
 	}
-
-	CloseHandle(hf);
-
-
+	for (int i = 0; i < sizeof(hf) / sizeof(hf[0]); i++) {
+		CheckError(FALSE == FlushFileBuffers(hf[i]), 1, "No se pudo vaciar el buffer de escritura");
+	}
+	for (int i = 0; i < sizeof(hf) / sizeof(hf[0]); i++) {
+		CheckError(FALSE == CloseHandle(hf[i]), 1, "No se pudo cerrar el archivo");
+	}
 	printf("\nPulse una tecla para terminar\n");
-	getchar();
+	(void)getchar();
 	return 0;
 }
 

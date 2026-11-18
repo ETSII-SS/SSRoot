@@ -24,5 +24,7 @@
   <ItemGroup>
     <None Include="t.dat" />
     <None Include="Tabla1.dat" />
+    <None Include="Tabla3.dat" />
+    <None Include="Tabla2.dat" />
   </ItemGroup>
 </Project>
