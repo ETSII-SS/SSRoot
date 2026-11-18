@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
 
 
 	// Abrir archivo de lectura
-	hIn = CreateFile(argv[1], GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,    // Lo abre si existe, si no existe falla
+	hIn = CreateFile(argv[1], GENERIC_READ, FILE_SHARE_WRITE, NULL, OPEN_EXISTING,    // Lo abre si existe, si no existe falla
 		FILE_ATTRIBUTE_NORMAL, NULL);
 	CheckError(INVALID_HANDLE_VALUE == hIn, 1, "No se pudo abrir el archivo de entrada");
 	// Abrir archivo de escritura
-	hOut = CreateFile(argv[1], GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,    // <-- Se crea si no existe, si existe se sobreescribe
+	hOut = CreateFile(argv[1], GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING,    // <-- Se crea si no existe, si existe se sobreescribe
 		FILE_ATTRIBUTE_NORMAL, NULL);
 	CheckError(INVALID_HANDLE_VALUE == hOut, 1, "No se pudo abrir el archivo de salida");
 	bytesLeidos = 1; // Esto es solo para forzar la primera entrada en el bucle while

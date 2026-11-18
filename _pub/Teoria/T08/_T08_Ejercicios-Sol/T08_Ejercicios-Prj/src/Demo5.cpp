@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "pLibSS.h"
+#include <sslib/SSLib.h>
 
 #define TAM_BLOQUE (1024*1024)
 
@@ -14,15 +14,15 @@ int main(int argc, char *argv[])
 
 
 	hFile = CreateFile("in.BMP", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	CheckError(hFile == INVALID_HANDLE_VALUE, "ERROR abriendo archivo para escribir", 1);
+	CheckError(hFile == INVALID_HANDLE_VALUE, 5, "ERROR abriendo archivo para escribir");
 	TamArchivo = GetFileSize(hFile, NULL);
 
 	//> Crea el mapa
 	hMap = CreateFileMapping(hFile, NULL, PAGE_READWRITE, 0, TamArchivo, NULL);
-	CheckError(NULL == hMap, "ERROR ejecutando CreateFileMapping", 1);
+	CheckError(NULL == hMap, 1, "ERROR ejecutando CreateFileMapping");
 	//> Crea vista del archivo (= reserva páginas en memoria)
 	pView = (char *)MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, TamArchivo);
-	CheckError(NULL == pView, "ERROR ejecutando MapViewOfFile", 1);
+	CheckError(NULL == pView, 2, "ERROR ejecutando MapViewOfFile");
 	// A partir de aquí ya puedo usar el puntero directamente...
 
 		DWORD MaxX, MaxY, *pDWORD;
@@ -84,7 +84,7 @@ int main_ejercio9_Tema5(int argc, char *argv[])
 	DWORD cero = 0;
 	setlocale(LC_ALL, "Spanish"); // Previo
 
-	CheckError(argc != 2, "Es necesario poner el nombre del archivo en la línea de comandos", 1);
+	CheckError(argc != 2, 1, "Es necesario poner el nombre del archivo en la línea de comandos");
 
 
 	// Comprueba que es bitmap de 24 bits
@@ -93,7 +93,7 @@ int main_ejercio9_Tema5(int argc, char *argv[])
 
 	// Abre el archivo	
 	hArchivo = CreateFile(argv[1], GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	CheckError(INVALID_HANDLE_VALUE == hArchivo, "ERROR: No se pudo abrir el archivo", 1);
+	CheckError(INVALID_HANDLE_VALUE == hArchivo, 2, "ERROR: No se pudo abrir el archivo");
 
 
 	// Dos métodos para leer la info de cabecera: 
@@ -106,20 +106,20 @@ int main_ejercio9_Tema5(int argc, char *argv[])
 	// Leer MaxX y MaxY
 	// ver campos biWidth y biHeight en https://msdn.microsoft.com/en-us/library/windows/desktop/dd183376%28v=vs.85%29.aspx
 	Movido = SetFilePointer(hArchivo, 18, NULL, FILE_BEGIN);
-	CheckError(INVALID_SET_FILE_POINTER == Movido, "Error al ejecutar SetFilePointer)", 1);
+	CheckError(INVALID_SET_FILE_POINTER == Movido, 3, "Error al ejecutar SetFilePointer)");
 	CheckError(FALSE == ReadFile(hArchivo, &MaxX, sizeof(MaxX), &Movido, NULL),
-		"Error: No se ha podido leer MaxX", 1);
+		3, "Error: No se ha podido leer MaxX");
 	CheckError(FALSE == ReadFile(hArchivo, &MaxY, sizeof(MaxY), &Movido, NULL),
-		"Error: No se ha podido leer MaxY", 1);
+		4, "Error: No se ha podido leer MaxY");
 	// ir al inicio de la matriz de pixel.
 #define TAM_CABECERAS (sizeof( BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER))
 
 	Movido = SetFilePointer(hArchivo, TAM_CABECERAS, NULL, FILE_BEGIN);
-	CheckError(INVALID_SET_FILE_POINTER == Movido, "Error al ejecutar SetFilePointer)", 1);
+	CheckError(INVALID_SET_FILE_POINTER == Movido, 5, "Error al ejecutar SetFilePointer)");
 
 	// escribir el punto negro
 	CheckError(FALSE == WriteFile(hArchivo, &cero, 3, &Movido, NULL) || Movido != 3,
-		"Error al escribir pixel", 1);
+		5, "Error al escribir pixel");
 	// ir al final
 	int tamImagen;
 	if (MaxX * 3 % 4 == 0)
@@ -128,10 +128,10 @@ int main_ejercio9_Tema5(int argc, char *argv[])
 		tamImagen = (MaxX * 3 + 4 - (MaxX * 3 % 4)) *MaxY;
 
 	Movido = SetFilePointer(hArchivo, TAM_CABECERAS + tamImagen - 1, NULL, FILE_BEGIN);
-	CheckError(INVALID_SET_FILE_POINTER == Movido, "Error al ejecutar SetFilePointer)", 1);
+	CheckError(INVALID_SET_FILE_POINTER == Movido, 6, "Error al ejecutar SetFilePointer)");
 	// escribir punto negro
 	CheckError(FALSE == WriteFile(hArchivo, &cero, 3, &Movido, NULL) || Movido != 3,
-		"Error al escribir pixel", 1);
+		6, "Error al escribir pixel");
 
 	CloseHandle(hArchivo);
 

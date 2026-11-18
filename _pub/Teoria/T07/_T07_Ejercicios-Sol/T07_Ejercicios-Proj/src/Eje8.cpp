@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
 	// Abrir archivo de escritura
 	hOut = CreateFile(nombreArchTmp, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,    // <-- Se crea si no existe, si existe se sobreescribe
-		FILE_ATTRIBUTE_NORMAL, NULL);
+		FILE_ATTRIBUTE_TEMPORARY, NULL);
 	CheckError(INVALID_HANDLE_VALUE == hOut, 1, "No se pudo abrir el archivo de salida");
 	bytesLeidos = 1; // Esto es solo para forzar la primera entrada en el bucle while
 	DWORD upLow = 0;

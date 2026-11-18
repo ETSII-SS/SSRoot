@@ -496,9 +496,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="t.dat" />
-    <None Include="Tabla1.dat" />
-    <None Include="Tabla2.dat" />
-    <None Include="Tabla3.dat" />
+    <None Include="Tabla1.bin" />
+    <None Include="Tabla2.bin" />
+    <None Include="Tabla3.bin" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
