@@ -1,143 +1,128 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <locale.h>
+#include <string.h>
 #include <sslib/SSLib.h>
 
-#define TAM_BLOQUE (1024*1024)
+// Demo 5: archivos mapeados en memoria.
+// Pone en negro el primer pixel (abajo a la izquierda) y el último (arriba a la derecha)
+// de un BMP de 24 bits. Dos versiones del mismo proceso:
+//   Demo5 [archivo.bmp]             -> con el archivo mapeado en memoria (sin ReadFile/WriteFile)
+//   Demo5 [archivo.bmp] /readwrite  -> con ReadFile/WriteFile y SetFilePointer, para comparar
+// Si no se indica archivo, usa in.bmp. Para restaurarlo: copiar encima "in - copia.bmp".
+// Formato BMP: ver BITMAPFILEHEADER y BITMAPINFOHEADER en la ayuda de la API.
 
-int main(int argc, char *argv[])
+// Tamaño en bytes de una fila de pixeles: cada fila ocupa un múltiplo de 4 bytes
+static DWORD TamFila(LONG ancho)
+{
+	return ((DWORD)ancho * 3 + 3) & ~3u;
+}
+
+// Versión con el archivo mapeado en memoria
+static void PuntosNegrosConMapa(const char * ruta)
 {
 	HANDLE hFile;
 	HANDLE hMap;
-	DWORD TamArchivo;
-	char * pView;
+	LARGE_INTEGER TamArchivo;
+	BYTE * pView;
 
-	setlocale(LC_ALL, "Spanish"); // Previo
+	hFile = CreateFileA(ruta, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	CheckError(hFile == INVALID_HANDLE_VALUE, 5, "ERROR abriendo el archivo %s", ruta);
+	CheckError(!GetFileSizeEx(hFile, &TamArchivo), 6, "ERROR obteniendo el tamaño del archivo");
+	// Un archivo de 0 bytes no se puede mapear. Además, debe caber al menos la cabecera.
+	CheckError(TamArchivo.QuadPart < (LONGLONG)(sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER)), 7,
+		"ERROR: el archivo es demasiado pequeño para ser un BMP");
 
-
-	hFile = CreateFile("in.BMP", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	CheckError(hFile == INVALID_HANDLE_VALUE, 5, "ERROR abriendo archivo para escribir");
-	TamArchivo = GetFileSize(hFile, NULL);
-
-	//> Crea el mapa
-	hMap = CreateFileMapping(hFile, NULL, PAGE_READWRITE, 0, TamArchivo, NULL);
+	//> Crea el mapa (tamaño 0, 0: el del archivo)
+	hMap = CreateFileMappingA(hFile, NULL, PAGE_READWRITE, 0, 0, NULL);
 	CheckError(NULL == hMap, 1, "ERROR ejecutando CreateFileMapping");
-	//> Crea vista del archivo (= reserva páginas en memoria)
-	pView = (char *)MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, TamArchivo);
+	//> Crea vista de todo el archivo (= reserva direcciones; cada página se lee del disco al usarla)
+	pView = (BYTE *)MapViewOfFile(hMap, FILE_MAP_WRITE, 0, 0, 0);
 	CheckError(NULL == pView, 2, "ERROR ejecutando MapViewOfFile");
 	// A partir de aquí ya puedo usar el puntero directamente...
 
-		DWORD MaxX, MaxY, *pDWORD;
-		pDWORD = (DWORD *) &pView[18];				// pDWORD lo uso para cargar direcciones de datos DWORD
-		MaxX = *pDWORD; //*((DWORD*)(&pView[18]))	// alternativa, usar un casting sobre pView
-		pDWORD = (DWORD *) &pView[18+4];
-		MaxY = *pDWORD; //*((DWORD*)(&pView[18]))
+	BITMAPFILEHEADER * pCabArchivo = (BITMAPFILEHEADER *)pView;
+	BITMAPINFOHEADER * pCabImagen = (BITMAPINFOHEADER *)&pView[sizeof(BITMAPFILEHEADER)];
+	CheckError(pCabArchivo->bfType != 0x4D42 || pCabImagen->biBitCount != 24 || pCabImagen->biCompression != BI_RGB, 8,
+		"ERROR: el archivo no es un BMP de 24 bits sin comprimir");
 
-		//		// Leer MaxX y MaxY
-//		// ver campos biWidth y biHeight en https://msdn.microsoft.com/en-us/library/windows/desktop/dd183376%28v=vs.85%29.aspx
-//		Movido = SetFilePointer(hArchivo, 18, NULL, FILE_BEGIN);
-//		CheckError(INVALID_SET_FILE_POINTER == Movido, "Error al ejecutar SetFilePointer)", 1);
-//		CheckError(FALSE == ReadFile(hArchivo, &MaxX, sizeof(MaxX), &Movido, NULL),
-//			"Error: No se ha podido leer MaxX", 1);
-//		CheckError(FALSE == ReadFile(hArchivo, &MaxY, sizeof(MaxY), &Movido, NULL),
-//			"Error: No se ha podido leer MaxY", 1);
-//		// ir al inicio de la matriz de pixel.
-#define TAM_CABECERAS (sizeof( BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER))
-		//pView[TAM_CABECERAS] = 0;
-		//pView[TAM_CABECERAS+1] = 0;
-		//pView[TAM_CABECERAS+2] = 0;
-		memset(&pView[TAM_CABECERAS], 0, 3);
-		//;
-//		Movido = SetFilePointer(hArchivo, TAM_CABECERAS, NULL, FILE_BEGIN);
-//		CheckError(INVALID_SET_FILE_POINTER == Movido, "Error al ejecutar SetFilePointer)", 1);
-//
-//		// escribir el punto negro
-//		CheckError(FALSE == WriteFile(hArchivo, &cero, 3, &Movido, NULL) || Movido != 3,
-//			"Error al escribir pixel", 1);
-//		// ir al final
+	LONG MaxX = pCabImagen->biWidth;
+	LONG MaxY = pCabImagen->biHeight < 0 ? -pCabImagen->biHeight : pCabImagen->biHeight; // negativo: filas de arriba abajo
+	DWORD tamFila = TamFila(MaxX);
+	LONGLONG tamImagen = (LONGLONG)tamFila * MaxY;
+	CheckError(MaxX <= 0 || MaxY <= 0 || pCabArchivo->bfOffBits + tamImagen > TamArchivo.QuadPart, 9,
+		"ERROR: las dimensiones de la cabecera no caben en el archivo");
 
-		int tamImagen;
-		if (MaxX * 3 % 4 == 0)
-			tamImagen = MaxX * 3 * MaxY;
-		else
-			tamImagen = (MaxX * 3 + 4 - (MaxX * 3 % 4)) *MaxY;
-
-		memset(&pView[TAM_CABECERAS + tamImagen -3], 0, 3);
+	BYTE * pPixeles = &pView[pCabArchivo->bfOffBits];  // los pixeles empiezan en bfOffBits
+	memset(&pPixeles[0], 0, 3);                                         // primer pixel de la primera fila
+	memset(&pPixeles[(MaxY - 1) * tamFila + (MaxX - 1) * 3], 0, 3);     // último pixel de la última fila (sin el relleno)
 
 	//>Libera vista y mapa
 	UnmapViewOfFile(pView);
 	CloseHandle(hMap);
 	CloseHandle(hFile);
-
-
-
-	printf("\nPulse una tecla para terminar\n");  //Solo para depurar. Quitar si no es necesario
-	getchar();
-	return 0;
 }
 
-
-
-int main_ejercio9_Tema5(int argc, char *argv[])
+// Versión tradicional, con ReadFile/WriteFile y SetFilePointer, para comparar
+static void PuntosNegrosConReadWrite(const char * ruta)
 {
 	HANDLE hArchivo;
 	DWORD Movido;
-	DWORD MaxX, MaxY;
-	DWORD cero = 0;
-	setlocale(LC_ALL, "Spanish"); // Previo
+	BITMAPFILEHEADER CabArchivo;
+	BITMAPINFOHEADER CabImagen;
+	BYTE negro[3] = { 0, 0, 0 };
 
-	CheckError(argc != 2, 1, "Es necesario poner el nombre del archivo en la línea de comandos");
+	hArchivo = CreateFileA(ruta, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	CheckError(INVALID_HANDLE_VALUE == hArchivo, 2, "ERROR: No se pudo abrir el archivo %s", ruta);
 
+	// Lee las dos cabeceras completas
+	CheckError(!ReadFile(hArchivo, &CabArchivo, sizeof(CabArchivo), &Movido, NULL) || Movido != sizeof(CabArchivo),
+		3, "Error: No se ha podido leer la cabecera del archivo");
+	CheckError(!ReadFile(hArchivo, &CabImagen, sizeof(CabImagen), &Movido, NULL) || Movido != sizeof(CabImagen),
+		3, "Error: No se ha podido leer la cabecera de la imagen");
+	CheckError(CabArchivo.bfType != 0x4D42 || CabImagen.biBitCount != 24 || CabImagen.biCompression != BI_RGB, 8,
+		"ERROR: el archivo no es un BMP de 24 bits sin comprimir");
 
-	// Comprueba que es bitmap de 24 bits
-	// PENDIENTE: si no es BMP da un mensaje y cierra el programa
+	LONG MaxX = CabImagen.biWidth;
+	LONG MaxY = CabImagen.biHeight < 0 ? -CabImagen.biHeight : CabImagen.biHeight;
+	DWORD tamFila = TamFila(MaxX);
+	LARGE_INTEGER TamArchivo;
+	CheckError(!GetFileSizeEx(hArchivo, &TamArchivo), 6, "ERROR obteniendo el tamaño del archivo");
+	CheckError(MaxX <= 0 || MaxY <= 0 || CabArchivo.bfOffBits + (LONGLONG)tamFila * MaxY > TamArchivo.QuadPart, 9,
+		"ERROR: las dimensiones de la cabecera no caben en el archivo");
 
+	// Primer pixel: al inicio de la matriz de pixeles
+	Movido = SetFilePointer(hArchivo, (LONG)CabArchivo.bfOffBits, NULL, FILE_BEGIN);
+	CheckError(INVALID_SET_FILE_POINTER == Movido, 5, "Error al ejecutar SetFilePointer");
+	CheckError(!WriteFile(hArchivo, negro, 3, &Movido, NULL) || Movido != 3, 5, "Error al escribir pixel");
 
-	// Abre el archivo	
-	hArchivo = CreateFile(argv[1], GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	CheckError(INVALID_HANDLE_VALUE == hArchivo, 2, "ERROR: No se pudo abrir el archivo");
-
-
-	// Dos métodos para leer la info de cabecera: 
-	// 1) Leer las cabeceras completas.
-	// 2) leer sólo los campos que interesan.
-
-	// Usaremos el método 2) para mostrar cómo se usa SetFilePointer...
-
-
-	// Leer MaxX y MaxY
-	// ver campos biWidth y biHeight en https://msdn.microsoft.com/en-us/library/windows/desktop/dd183376%28v=vs.85%29.aspx
-	Movido = SetFilePointer(hArchivo, 18, NULL, FILE_BEGIN);
-	CheckError(INVALID_SET_FILE_POINTER == Movido, 3, "Error al ejecutar SetFilePointer)");
-	CheckError(FALSE == ReadFile(hArchivo, &MaxX, sizeof(MaxX), &Movido, NULL),
-		3, "Error: No se ha podido leer MaxX");
-	CheckError(FALSE == ReadFile(hArchivo, &MaxY, sizeof(MaxY), &Movido, NULL),
-		4, "Error: No se ha podido leer MaxY");
-	// ir al inicio de la matriz de pixel.
-#define TAM_CABECERAS (sizeof( BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER))
-
-	Movido = SetFilePointer(hArchivo, TAM_CABECERAS, NULL, FILE_BEGIN);
-	CheckError(INVALID_SET_FILE_POINTER == Movido, 5, "Error al ejecutar SetFilePointer)");
-
-	// escribir el punto negro
-	CheckError(FALSE == WriteFile(hArchivo, &cero, 3, &Movido, NULL) || Movido != 3,
-		5, "Error al escribir pixel");
-	// ir al final
-	int tamImagen;
-	if (MaxX * 3 % 4 == 0)
-		tamImagen = MaxX * 3 * MaxY;
-	else
-		tamImagen = (MaxX * 3 + 4 - (MaxX * 3 % 4)) *MaxY;
-
-	Movido = SetFilePointer(hArchivo, TAM_CABECERAS + tamImagen - 1, NULL, FILE_BEGIN);
-	CheckError(INVALID_SET_FILE_POINTER == Movido, 6, "Error al ejecutar SetFilePointer)");
-	// escribir punto negro
-	CheckError(FALSE == WriteFile(hArchivo, &cero, 3, &Movido, NULL) || Movido != 3,
-		6, "Error al escribir pixel");
+	// Último pixel de la última fila (sin el relleno)
+	Movido = SetFilePointer(hArchivo, (LONG)(CabArchivo.bfOffBits + (MaxY - 1) * tamFila + (MaxX - 1) * 3), NULL, FILE_BEGIN);
+	CheckError(INVALID_SET_FILE_POINTER == Movido, 6, "Error al ejecutar SetFilePointer");
+	CheckError(!WriteFile(hArchivo, negro, 3, &Movido, NULL) || Movido != 3, 6, "Error al escribir pixel");
 
 	CloseHandle(hArchivo);
+}
 
+int main(int argc, char *argv[])
+{
+	const char * ruta = "in.bmp";
+	bool conReadWrite = false;
 
+	setlocale(LC_ALL, "Spanish"); // Previo
+
+	for (int i = 1; i < argc; i++) {
+		if (_stricmp(argv[i], "/readwrite") == 0)
+			conReadWrite = true;
+		else
+			ruta = argv[i];
+	}
+	if (conReadWrite)
+		PuntosNegrosConReadWrite(ruta);
+	else
+		PuntosNegrosConMapa(ruta);
+	printf("\nPuntos negros escritos en %s\n", ruta);
 
 	printf("\nPulse una tecla para terminar\n");  //Solo para depurar. Quitar si no es necesario
-	getchar();
+	(void)getchar();
 	return 0;
 }
