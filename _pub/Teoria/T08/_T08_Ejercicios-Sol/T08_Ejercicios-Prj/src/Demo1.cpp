@@ -2,7 +2,7 @@
 #include <locale.h>
 #include <sslib/SSLib.h>
 
-// Demo 1 (configuración x86) y Demo 2 (configuración x64): el mismo programa.
+// Tema 8, Demo 1 (configuración x86) y Demo 2 (configuración x64): el mismo programa.
 int main(int argc, char *argv[])
 {
 	SYSTEM_INFO SysInfo;
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	GetSystemInfo(&SysInfo);
 	printf("\nLa memoria de usuario de esta aplicación está en 0x%p - 0x%p \n",
 		SysInfo.lpMinimumApplicationAddress, SysInfo.lpMaximumApplicationAddress);
-	TamMemoria = (LPBYTE)SysInfo.lpMaximumApplicationAddress - (LPBYTE)SysInfo.lpMinimumApplicationAddress;
+	TamMemoria = (double)((LPBYTE)SysInfo.lpMaximumApplicationAddress - (LPBYTE)SysInfo.lpMinimumApplicationAddress);
 	printf("Tamaño máximo (en GBytes): %f\n", (float)TamMemoria / (1024.0*1024.0*1024.0));
 
 	// Tamaño de página y granularidad de reserva (VirtualAlloc)

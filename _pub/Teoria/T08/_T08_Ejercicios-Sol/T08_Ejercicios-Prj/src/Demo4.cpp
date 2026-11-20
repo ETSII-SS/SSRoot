@@ -5,8 +5,8 @@
 #include <Windows.h>
 
 /// IMPORTANTE: Compilar este programa en x64
-/// Uso: Demo4               -> reserva y asocia toda la secuencia de una vez
-///      Demo4 /porsegundos  -> reserva toda la secuencia, pero asocia solo el segundo que procesa
+/// Uso: Tema 8, Demo4               -> reserva y asocia toda la secuencia de una vez
+///      Tema 8, Demo4 /porsegundos  -> reserva toda la secuencia, pero asocia solo el segundo que procesa
 /// Para ver la diferencia: columna "Tamaño de confirmación" (memoria asociada) del Administrador de tareas.
 const int	MaxX = 1024, // Cada fila ocupa una página de 4 K (1024*4)
 			MaxY = 4*1024, // Cada imagen son 16 Mbytes 

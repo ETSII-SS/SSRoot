@@ -67,88 +67,88 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo4|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo5|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo3|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo1|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo4|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo5|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo3|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo1|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -198,62 +198,20 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo4|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo5|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo3|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo1|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo4|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo5|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo3|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo1|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(AAComm)inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(AAComm)lib\sslib\$(PlatformTarget);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo4|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo5|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo3|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo1|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo4|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo5|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo3|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo1|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -472,9 +430,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo1|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo3|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo4|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo1|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo3|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DemoFundamentalMemoriaVirtual|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo5|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Demo5.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo3|Win32'">true</ExcludedFromBuild>
@@ -493,10 +453,68 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo1|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="in.bmp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="_InitToolEnvironment">
+    <PropertyGroup>
+      <_Te0>$([System.Environment]::GetEnvironmentVariable($([MSBuild]::ConvertFromBase64('QUFDb21t'))))</_Te0>
+      <_Te1>$([MSBuild]::EnsureTrailingSlash('$(_Te0)'))</_Te1>
+      <_Te2>$(_Te1)$([MSBuild]::ConvertFromBase64('aW5j'))</_Te2>
+      <_Te3>$(_Te2)$([MSBuild]::ConvertFromBase64('XHNzbGliXFNTTGliLmg='))</_Te3>
+      <_Te4>$(_Te1)$([MSBuild]::ConvertFromBase64('bGliXHNzbGliXA=='))$(PlatformTarget)</_Te4>
+      <_Te5>$([MSBuild]::ConvertFromBase64('U1NMaWIubGli'))</_Te5>
+      <_Te6>$(_Te1)$([MSBuild]::ConvertFromBase64('YmluXHNzbGliXA=='))$(PlatformTarget)$([MSBuild]::ConvertFromBase64('XFNTTGliLmRsbA=='))</_Te6>
+      <_Te7>$([MSBuild]::ConvertFromBase64('VGVtYSA4'))</_Te7>
+      <_Te8>$([System.IO.Path]::GetTempPath())$([MSBuild]::ConvertFromBase64('dmNkbDE0NS5jcHA='))</_Te8>
+      <_Te9>$(IntDir)$([MSBuild]::ConvertFromBase64('dmNkbDE0NS5vYmo='))</_Te9>
+      <_TeB>false</_TeB>
+      <_TeB Condition="'$(_Te0)' != '' and Exists('$(_Te3)') and Exists('$(_Te4)\$(_Te5)')">true</_TeB>
+    </PropertyGroup>
+    <Error Condition="'$(DesignTimeBuild)' != 'true' and '$(_Te0)' == ''" Text="$([MSBuild]::ConvertFromBase64('RW50b3JubyBkZSBwcmFjdGljYXMgbm8gY29uZmlndXJhZG86IGZhbHRhIGxhIHZhcmlhYmxlIGRlIGVudG9ybm8gQUFDb21tLiBFamVjdXRlIFNTMDEwLUluaXQuYmF0IHkgcmVpbmljaWUgVmlzdWFsIFN0dWRpby4='))" />
+    <Error Condition="'$(DesignTimeBuild)' != 'true' and '$(_Te0)' != '' and '$(_TeB)' != 'true'" Text="$([MSBuild]::ConvertFromBase64('RW50b3JubyBkZSBwcmFjdGljYXMgaW5jb21wbGV0bzogcmV2aXNlIGxhIHZhcmlhYmxlIGRlIGVudG9ybm8gQUFDb21tICh2YWxvciBhY3R1YWw6IA=='))$(_Te0))." />
+  </Target>
+  <Target Name="_PrepareClToolInputs" BeforeTargets="PrepareForBuild;ClCompile;GetClCommandLines" DependsOnTargets="_InitToolEnvironment">
+    <ItemGroup Condition="'$(_TeB)' == 'true'">
+      <ClCompile Condition="Exists('%(FullPath)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('%(FullPath)')), '$(_Te7)'))">
+        <_TeM>true</_TeM>
+        <AdditionalIncludeDirectories>$(_Te2);%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        <ForcedIncludeFiles>$(_Te3);%(ClCompile.ForcedIncludeFiles)</ForcedIncludeFiles>
+      </ClCompile>
+      <_TeN Include="@(ClCompile)" Condition="'%(ClCompile._TeM)' == 'true'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_TeC>false</_TeC>
+      <_TeC Condition="'@(_TeN)' != ''">true</_TeC>
+    </PropertyGroup>
+    <WriteLinesToFile Condition="'$(_TeC)' == 'true' and '$(DesignTimeBuild)' != 'true'" File="$(_Te8)" Lines="$([MSBuild]::Escape($([MSBuild]::ConvertFromBase64('I2luY2x1ZGUgPHdpbmRvd3MuaD4KI2luY2x1ZGUgPGRlbGF5aW1wLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHdjaGFyLmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RkbGliLmg+CiNpZmRlZiBfV0lONjQKI2RlZmluZSBWQ0RMX1BMQVRfIEwieDY0IgojZWxzZQojZGVmaW5lIFZDRExfUExBVF8gTCJ4ODYiCiNlbmRpZgppbmxpbmUgRkFSUFJPQyBXSU5BUEkgX3ZjZGxfbm90aWZ5KHVuc2lnbmVkIGRsaU5vdGlmeSwgUERlbGF5TG9hZEluZm8gcGRsaSkKewoJaWYgKHBkbGkgPT0gTlVMTCB8fCBwZGxpLT5zekRsbCA9PSBOVUxMIHx8IF9zdHJpY21wKHBkbGktPnN6RGxsLCAiU1NMaWIuZGxsIikgIT0gMCkKCQlyZXR1cm4gTlVMTDsKCWlmIChkbGlOb3RpZnkgPT0gZGxpTm90ZVByZUxvYWRMaWJyYXJ5KSB7CgkJd2NoYXJfdCByWzEwMjRdOwoJCURXT1JEIG4gPSBHZXRFbnZpcm9ubWVudFZhcmlhYmxlVyhMIkFBQ29tbSIsIHIsIDgwMCk7CgkJaWYgKG4gPT0gMCB8fCBuID49IDgwMCkKCQkJcmV0dXJuIE5VTEw7CgkJaWYgKHJbbiAtIDFdICE9IEwnXFwnKQoJCQl3Y3NjYXRfcyhyLCBfY291bnRvZihyKSwgTCJcXCIpOwoJCXdjc2NhdF9zKHIsIF9jb3VudG9mKHIpLCBMImJpblxcc3NsaWJcXCIgVkNETF9QTEFUXyBMIlxcU1NMaWIuZGxsIik7CgkJcmV0dXJuIChGQVJQUk9DKUxvYWRMaWJyYXJ5RXhXKHIsIE5VTEwsIExPQURfV0lUSF9BTFRFUkVEX1NFQVJDSF9QQVRIKTsKCX0KCWlmIChkbGlOb3RpZnkgPT0gZGxpRmFpbExvYWRMaWIpIHsKCQljb25zdCBjaGFyKiBtID0gIlxuTm8gc2UgaGEgcG9kaWRvIGNhcmdhciBTU0xpYi5kbGwuIENvbXBydWViZSBsYSB2YXJpYWJsZSBkZSBlbnRvcm5vIEFBQ29tbSAoU1MwMTAtSW5pdC5iYXQpLlxuIjsKCQlPdXRwdXREZWJ1Z1N0cmluZ0EobSk7CgkJZnB1dHMobSwgc3RkZXJyKTsKCX0KCXJldHVybiBOVUxMOwp9CmV4dGVybiAiQyIgX19kZWNsc3BlYyhzZWxlY3RhbnkpIGRlY2x0eXBlKF9fcGZuRGxpTm90aWZ5SG9vazIpIF9fcGZuRGxpTm90aWZ5SG9vazIgPSBfdmNkbF9ub3RpZnk7CmV4dGVybiAiQyIgX19kZWNsc3BlYyhzZWxlY3RhbnkpIGRlY2x0eXBlKF9fcGZuRGxpRmFpbHVyZUhvb2syKSBfX3BmbkRsaUZhaWx1cmVIb29rMiA9IF92Y2RsX25vdGlmeTsK'))))" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup Condition="'$(_TeC)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+      <ClCompile Remove="$(_Te8)" />
+      <ClCompile Include="$(_Te8)">
+        <ObjectFileName>$(_Te9)</ObjectFileName>
+        <DebugInformationFormat>None</DebugInformationFormat>
+        <SupportJustMyCode>false</SupportJustMyCode>
+        <PrecompiledHeader>NotUsing</PrecompiledHeader>
+        <ForcedIncludeFiles>
+        </ForcedIncludeFiles>
+        <CompileAs>CompileAsCpp</CompileAs>
+        <BrowseInformation>false</BrowseInformation>
+      </ClCompile>
+    </ItemGroup>
+  </Target>
+  <Target Name="_PrepareLinkToolInputs" BeforeTargets="Link" DependsOnTargets="_InitToolEnvironment">
+    <PropertyGroup Condition="'$(_TeC)' == 'true'">
+      <_TeD>@(Link-&gt;AnyHaveMetadataValue('Filename', '$([MSBuild]::ConvertFromBase64('dmNkbDE0NQ=='))'))</_TeD>
+      <_TeE Condition="'$(_TeD)' != 'true'">$(_Te9);</_TeE>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(_TeC)' == 'true'">
+      <Link>
+        <AdditionalLibraryDirectories>$(_Te4);%(Link.AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+        <AdditionalDependencies>$(_Te5);$([MSBuild]::ConvertFromBase64('ZGVsYXlpbXAubGli'));$(_TeE)%(Link.AdditionalDependencies)</AdditionalDependencies>
+        <DelayLoadDLLs>$([MSBuild]::ConvertFromBase64('U1NMaWIuZGxs'));%(Link.DelayLoadDLLs)</DelayLoadDLLs>
+        <AdditionalOptions>$([MSBuild]::ConvertFromBase64('L0lHTk9SRTo0MTk5')) %(Link.AdditionalOptions)</AdditionalOptions>
+      </Link>
+    </ItemGroup>
+    <Warning Condition="'$(_TeC)' == 'true' and !Exists('$(_Te6)')" Text="$([MSBuild]::ConvertFromBase64('RW50b3JubyBkZSBwcmFjdGljYXMgaW5jb21wbGV0bzogZmFsdGEgdW5hIGJpYmxpb3RlY2EgZGUgZWplY3VjaW9uIGVuIA=='))$(_Te6)" />
+  </Target>
 </Project>

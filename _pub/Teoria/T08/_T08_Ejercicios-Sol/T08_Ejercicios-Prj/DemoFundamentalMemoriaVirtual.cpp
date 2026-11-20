@@ -3,7 +3,7 @@
 #include <locale.h>
 #include <sslib/SSLib.h>
 
-// Demo fundamental de memoria virtual.
+// Tema 8, Demo fundamental de memoria virtual.
 // Ejecutar dos instancias a la vez (Ctrl+F5 dos veces, 
 //con varios segundos de separación: las dos imprimen la misma
 // dirección para contador, pero cada una tiene su propio valor.

@@ -11,7 +11,7 @@
 /// IMPORTANTE: Compilar este programa en x64
 /// ADVERTENCIA: guardar todos los archivos modificados antes de ejecutarlo.
 ///
-/// Demo 3: hiperpaginación (thrashing), de forma controlada.
+/// Tema 8, Demo 3: hiperpaginación (thrashing), de forma controlada.
 ///  1. Reserva bloques de 256 MBytes con malloc hasta sumar 1,5 veces la memoria física del equipo,
 ///     sin acercarse al límite de memoria asociable (memoria física + archivo de paginación).
 ///  2. Los rellena con datos pseudoaleatorios, que la compresión de memoria de Windows no puede reducir.

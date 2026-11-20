@@ -7,7 +7,4 @@
     <ClCompile Include="DemoFundamentalMemoriaVirtual.cpp" />
     <ClCompile Include="src\Demo4.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="in.bmp" />
-  </ItemGroup>
 </Project>
