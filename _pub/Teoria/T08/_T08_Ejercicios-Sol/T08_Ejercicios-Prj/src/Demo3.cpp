@@ -22,9 +22,7 @@
 #include <locale.h>
 #include <conio.h>
 #include <Windows.h>
-#include <psapi.h>  // GetProcessMemoryInfo
 #include <sslib/SSLib.h>
-#pragma comment(lib, "psapi.lib")
 
 #define GB ((size_t)1024 * 1024 * 1024)
 #define GB_DE_MAS 2       // GB que se reservan por encima de la memoria física
@@ -35,18 +33,15 @@ int  CalculaBloques();
 void RellenaAleatorio(char* bloque, size_t tam);
 void RecorreYMide(char* bloques[], int nBloques);
 
-int main(int argc, char* argv[])
-{
-	char* bloques[MAX_BLOQUES];
-
+int main(int argc, char* argv[]) {
 	setlocale(LC_ALL, "Spanish"); // Previo
-
-	int nBloques = CalculaBloques();       // imprime la memoria física y la que se va a reservar
+	char* bloques[MAX_BLOQUES]; // punteros a bloques de 1 GB
+	int nBloques = CalculaBloques(); // imprime la memoria física y la que se va a reservar
 	for (int n = 0; n < nBloques; n++) {
 		bloques[n] = (char*)malloc(GB);  // un bloque más, sin liberar los anteriores
 		CheckError(NULL == bloques[n], 1, "No se pudo reservar más memoria");
 		RellenaAleatorio(bloques[n], GB);  // datos que no se pueden comprimir
-		RecorreYMide(bloques, n + 1);      // recorre todo lo reservado: tiempo y fallos de página
+		RecorreYMide(bloques, n + 1); // recorre todo lo reservado: tiempo y fallos de página
 	}
 	printf("\nPulse una tecla para terminar: el SO recuperará toda la memoria del proceso\n");
 	(void)_getch();
@@ -83,6 +78,9 @@ void RellenaAleatorio(char* bloque, size_t tam)
 		p[i] = x;
 	}
 }
+
+#include <psapi.h>  // GetProcessMemoryInfo
+#pragma comment(lib, "psapi.lib")
 
 // Recorre los bloques modificando un byte de cada página e imprime una fila de la tabla: memoria
 // reservada, conjunto de trabajo del proceso, tiempo del recorrido y fallos de página.
